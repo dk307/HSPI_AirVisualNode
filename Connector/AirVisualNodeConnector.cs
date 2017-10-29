@@ -27,7 +27,7 @@ namespace Hspi.Connector
 
         public void Connect(CancellationToken token)
         {
-            startWorkingTask = Task.Factory.StartNew(async () => await StartWorking(token), token,
+            Task.Factory.StartNew(async () => await StartWorking(token), token,
                                        TaskCreationOptions.LongRunning,
                                        TaskScheduler.Current).Unwrap();
         }
@@ -149,9 +149,6 @@ namespace Hspi.Connector
         private readonly NetworkCredential credentials;
         private readonly ILogger logger;
         private bool disposedValue = false;
-        private object lastMessageLock = new object();
         private DateTime lastUpdate;
-        private Task startWorkingTask;
-        // To detect redundant calls
     }
 }

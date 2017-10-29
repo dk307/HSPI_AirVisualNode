@@ -69,11 +69,6 @@ namespace Hspi.Connector
             }
         }
 
-        private void DestroyConnection()
-        {
-            DisposeConnector();
-        }
-
         private void DisposeConnector()
         {
             if (connector != null)

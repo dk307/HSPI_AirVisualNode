@@ -45,19 +45,6 @@ namespace Hspi.DeviceData
         /// <param name="RefId">The reference identifier.</param>
         public abstract void SetInitialData(IHSApplication HS, int RefId);
 
-        protected static IList<VSVGPairs.VGPair> GetSingleGraphicsPairs(string fileName)
-        {
-            var pairs = new List<VSVGPairs.VGPair>();
-            pairs.Add(new VSVGPairs.VGPair()
-            {
-                PairType = VSVGPairs.VSVGPairType.Range,
-                Graphic = Path.Combine(PluginData.HSImagesPathRoot, fileName),
-                RangeStart = int.MinValue,
-                RangeEnd = int.MaxValue,
-            });
-            return pairs;
-        }
-
         /// <summary>
         /// Updates the device data from number data
         /// </summary>
