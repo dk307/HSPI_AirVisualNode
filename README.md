@@ -1,4 +1,4 @@
-Homeseer Ubiquiti mPower PlugIn
+Homeseer AirVisual Node PlugIn
 =====================================
 Overview
 --------
