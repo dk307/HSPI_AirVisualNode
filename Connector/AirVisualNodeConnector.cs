@@ -123,6 +123,7 @@ namespace Hspi.Connector
 
                         UpdateDelta(sensorData);
                         lastUpdate = sensorData.updateTime;
+                        logger.LogInfo(Invariant($"Updated data for device {DeviceIP} for time {sensorData.updateTime}"));
                     }
                 }
             }
