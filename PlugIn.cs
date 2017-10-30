@@ -1,7 +1,5 @@
-﻿using HomeSeerAPI;
-using Hspi.Connector;
+﻿using Hspi.Connector;
 using Hspi.DeviceData;
-using Hspi.Exceptions;
 using NullGuard;
 using Scheduler.Classes;
 using System;

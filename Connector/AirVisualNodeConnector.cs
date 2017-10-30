@@ -1,12 +1,11 @@
-﻿using System;
-using System.Diagnostics;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
-using Hspi.Connector.Model;
+﻿using Hspi.Connector.Model;
+using System;
 using System.Globalization;
 using System.IO;
+using System.Net;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Hspi.Connector
 {
@@ -73,23 +72,25 @@ namespace Hspi.Connector
                     DateTime localTime = DateTime.Now.ToLocalTime();
                     string path = Invariant($"{share}\\{localTime.Year}{localTime.Month}_AirVisual_values.txt");
 
-                    logger.LogDebug(Invariant($"Reading from {path}"));
-
-                    int bufferSize = 1024;
-                    using (var fileStream = new FileStream(path,
-                                                           FileMode.Open,
-                                                           FileAccess.Read,
-                                                           FileShare.ReadWrite | FileShare.Delete,
-                                                           bufferSize))
+                    using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
+                        logger.LogDebug(Invariant($"Reading from {path} with size {fileStream.Length} Bytes"));
+
+                        int bufferSize = 256;
+
                         fileStream.Seek(0, SeekOrigin.End);
                         fileStream.Seek(-Math.Min(bufferSize, fileStream.Length), SeekOrigin.Current);
 
                         using (var reader = new StreamReader(fileStream, Encoding.ASCII, false, bufferSize))
                         {
-                            while (!reader.EndOfStream)
+                            string lastData = await reader.ReadToEndAsync().ConfigureAwait(false);
+
+                            foreach (var reading in lastData.Split('\n'))
                             {
-                                lastString = await reader.ReadLineAsync();
+                                if (!string.IsNullOrWhiteSpace(reading))
+                                {
+                                    lastString = reading;
+                                }
                             }
                         }
                     }

@@ -4,7 +4,7 @@ Overview
 --------
 This plugin displays integrates AirVisual Node with Homeseer.
 
-It reads smb share of device every 10 seconds to pick up values.
+It reads smb share of device periodically to pick up values.
 
 Compatibility
 ------------

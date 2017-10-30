@@ -1,11 +1,9 @@
 ﻿using HomeSeerAPI;
 using Hspi.Connector.Model;
 using Hspi.DeviceData;
-using Hspi.Exceptions;
 using NullGuard;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 

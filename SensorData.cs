@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 #pragma warning disable 0649
 
