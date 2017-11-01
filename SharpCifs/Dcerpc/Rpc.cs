@@ -1,16 +1,16 @@
 // This code is derived from jcifs smb client library <jcifs at samba dot org>
 // Ported by J. Arturo <webmaster at komodosoft dot net>
-//  
+//
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -77,66 +77,6 @@ namespace SharpCifs.Dcerpc
                 for (int i = 0; i < nodes; i++)
                 {
                     Node[i] = unchecked((byte)src.Dec_ndr_small());
-                }
-            }
-        }
-
-        internal class PolicyHandle : NdrObject
-        {
-            public int Type;
-
-            public UuidT Uuid;
-
-            /// <exception cref="SharpCifs.Dcerpc.Ndr.NdrException"></exception>
-            public override void Encode(NdrBuffer dst)
-            {
-                dst.Align(4);
-                dst.Enc_ndr_long(Type);
-                dst.Enc_ndr_long(Uuid.TimeLow);
-                dst.Enc_ndr_short(Uuid.TimeMid);
-                dst.Enc_ndr_short(Uuid.TimeHiAndVersion);
-                dst.Enc_ndr_small(Uuid.ClockSeqHiAndReserved);
-                dst.Enc_ndr_small(Uuid.ClockSeqLow);
-                int uuidNodes = 6;
-                int uuidNodei = dst.Index;
-                dst.Advance(1 * uuidNodes);
-                dst = dst.Derive(uuidNodei);
-                for (int i = 0; i < uuidNodes; i++)
-                {
-                    dst.Enc_ndr_small(Uuid.Node[i]);
-                }
-            }
-
-            /// <exception cref="SharpCifs.Dcerpc.Ndr.NdrException"></exception>
-            public override void Decode(NdrBuffer src)
-            {
-                src.Align(4);
-                Type = src.Dec_ndr_long();
-                src.Align(4);
-                if (Uuid == null)
-                {
-                    Uuid = new UuidT();
-                }
-                Uuid.TimeLow = src.Dec_ndr_long();
-                Uuid.TimeMid = (short)src.Dec_ndr_short();
-                Uuid.TimeHiAndVersion = (short)src.Dec_ndr_short();
-                Uuid.ClockSeqHiAndReserved = unchecked((byte)src.Dec_ndr_small());
-                Uuid.ClockSeqLow = unchecked((byte)src.Dec_ndr_small());
-                int uuidNodes = 6;
-                int uuidNodei = src.Index;
-                src.Advance(1 * uuidNodes);
-                if (Uuid.Node == null)
-                {
-                    if (uuidNodes < 0 || uuidNodes > unchecked(0xFFFF))
-                    {
-                        throw new NdrException(NdrException.InvalidConformance);
-                    }
-                    Uuid.Node = new byte[uuidNodes];
-                }
-                src = src.Derive(uuidNodei);
-                for (int i = 0; i < uuidNodes; i++)
-                {
-                    Uuid.Node[i] = unchecked((byte)src.Dec_ndr_small());
                 }
             }
         }

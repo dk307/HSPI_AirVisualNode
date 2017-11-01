@@ -13,24 +13,12 @@ namespace SharpCifs.Util.Sharpen
         private static Runtime _instance;
         private List<ShutdownHook> _shutdownHooks = new List<ShutdownHook>();
 
-        internal void AddShutdownHook(IRunnable r)
-        {
-            ShutdownHook item = new ShutdownHook();
-            item.Runnable = r;
-            _shutdownHooks.Add(item);
-        }
-
-        internal int AvailableProcessors()
-        {
-            return Environment.ProcessorCount;
-        }
-
         public static long CurrentTimeMillis()
         {
             return DateTime.UtcNow.ToMillisecondsSinceEpoch();
         }
 
-        static Hashtable _properties;
+        private static Hashtable _properties;
 
         public static Hashtable GetProperties()
         {
@@ -56,11 +44,6 @@ namespace SharpCifs.Util.Sharpen
             return null;
         }
 
-        public static void SetProperty(string key, string value)
-        {
-            GetProperties()[key] = value;
-        }
-
         public static Runtime GetRuntime()
         {
             if (_instance == null)
@@ -73,11 +56,6 @@ namespace SharpCifs.Util.Sharpen
         public static int IdentityHashCode(object ob)
         {
             return RuntimeHelpers.GetHashCode(ob);
-        }
-
-        internal long MaxMemory()
-        {
-            return int.MaxValue;
         }
 
         private class ShutdownHook
@@ -149,19 +127,6 @@ namespace SharpCifs.Util.Sharpen
         public static bool Wait(object ob, long milis)
         {
             return Monitor.Wait(ob, (int)milis);
-        }
-
-        public static Type GetType(string name)
-        {
-            throw new NotImplementedException(
-                "AppDomain.CurrentDomain.GetAssemblies not found on .NetStandard");
-            //foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies ()) {
-            //	Type t = a.GetType (name);
-            //	if (t != null)
-            //		return t;
-            //}
-            //never used
-            //throw new InvalidOperationException ("Type not found: " + name);
         }
 
         public static void SetCharAt(StringBuilder sb, int index, char c)

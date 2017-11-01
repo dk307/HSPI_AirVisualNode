@@ -17,13 +17,11 @@ namespace SharpCifs.Util.Sharpen
         public FilePath(string path)
             : this((string)null, path)
         {
-
         }
 
         public FilePath(FilePath other, string child)
             : this((string)other, child)
         {
-
         }
 
         public FilePath(string other, string child)
@@ -34,12 +32,12 @@ namespace SharpCifs.Util.Sharpen
             }
             else
             {
-                while (!string.IsNullOrEmpty(child) 
-                       && (child[0] == Path.DirectorySeparatorChar 
+                while (!string.IsNullOrEmpty(child)
+                       && (child[0] == Path.DirectorySeparatorChar
                            || child[0] == Path.AltDirectorySeparatorChar))
                     child = child.Substring(1);
 
-                if (!string.IsNullOrEmpty(other) 
+                if (!string.IsNullOrEmpty(other)
                     && other[other.Length - 1] == Path.VolumeSeparatorChar)
                     other += Path.DirectorySeparatorChar;
 
@@ -89,38 +87,6 @@ namespace SharpCifs.Util.Sharpen
         {
             return new FilePath(Path.GetTempFileName());
         }
-
-        public static FilePath CreateTempFile(string prefix, string suffix)
-        {
-            return CreateTempFile(prefix, suffix, null);
-        }
-
-        public static FilePath CreateTempFile(string prefix, string suffix, FilePath directory)
-        {
-            string file;
-            if (prefix == null)
-            {
-                throw new ArgumentNullException("prefix");
-            }
-            if (prefix.Length < 3)
-            {
-                throw new ArgumentException("prefix must have at least 3 characters");
-            }
-            string str = (directory == null) ? Path.GetTempPath() : directory.GetPath();
-            do
-            {
-                file = Path.Combine(str, prefix + Interlocked.Increment(ref _tempCounter) + suffix);
-            } while (File.Exists(file));
-
-            new FileOutputStream(file).Close();
-            return new FilePath(file);
-        }
-
-
-        public void DeleteOnExit()
-        {
-        }
-
 
         public FilePath GetAbsoluteFile()
         {
@@ -229,16 +195,6 @@ namespace SharpCifs.Util.Sharpen
             }
         }
 
-        static void MakeDirWritable(string dir)
-        {
-            //FileHelper.Instance.MakeDirWritable (dir);
-        }
-
-        static void MakeFileWritable(string file)
-        {
-            //FileHelper.Instance.MakeFileWritable (file);
-        }
-
         public bool Mkdir()
         {
             try
@@ -267,43 +223,6 @@ namespace SharpCifs.Util.Sharpen
             {
                 return false;
             }
-        }
-
-        public bool RenameTo(FilePath file)
-        {
-            return RenameTo(file._path);
-        }
-
-        public bool RenameTo(string name)
-        {
-            return false; // FileHelper.Instance.RenameTo(this, name);
-        }
-
-        public bool SetLastModified(long milis)
-        {
-            return false; // FileHelper.Instance.SetLastModified(this, milis);
-        }
-
-        public bool SetReadOnly()
-        {
-            return false; // FileHelper.Instance.SetReadOnly(this);
-        }
-
-        public Uri ToUri()
-        {
-            return new Uri(_path);
-        }
-
-        // Don't change the case of this method, since ngit does reflection on it
-        public bool CanExecute()
-        {
-            return false; // FileHelper.Instance.CanExecute(this);
-        }
-
-        // Don't change the case of this method, since ngit does reflection on it
-        public bool SetExecutable(bool exec)
-        {
-            return false; // FileHelper.Instance.SetExecutable(this, exec);
         }
 
         public string GetParent()

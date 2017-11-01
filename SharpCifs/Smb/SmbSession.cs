@@ -40,167 +40,6 @@ namespace SharpCifs.Smb
         private static readonly int CachePolicy
             = Config.GetInt("jcifs.netbios.cachePolicy", 60 * 10) * 60;
 
-        internal static NbtAddress[] DcList;
-
-        internal static long DcListExpiration;
-
-        internal static int DcListCounter;
-
-        /// <exception cref="SharpCifs.Smb.SmbException"></exception>
-        private static NtlmChallenge Interrogate(NbtAddress addr)
-        {
-            UniAddress dc = new UniAddress(addr);
-            SmbTransport trans = SmbTransport.GetSmbTransport(dc, 0);
-            if (Username == null)
-            {
-                trans.Connect();
-                if (SmbTransport.LogStatic.Level >= 3)
-                {
-                    SmbTransport.LogStatic.WriteLine(
-                        "Default credentials (jcifs.smb.client.username/password)"
-                         + " not specified. SMB signing may not work propertly."
-                         + "  Skipping DC interrogation.");
-                }
-            }
-            else
-            {
-                SmbSession ssn = trans.GetSmbSession(NtlmPasswordAuthentication.Default);
-                ssn.GetSmbTree(LogonShare, null).TreeConnect(null, null);
-            }
-            return new NtlmChallenge(trans.Server.EncryptionKey, dc);
-        }
-
-        /// <exception cref="SharpCifs.Smb.SmbException"></exception>
-        /// <exception cref="UnknownHostException"></exception>
-        public static NtlmChallenge GetChallengeForDomain()
-        {
-            if (Domain == null)
-            {
-                throw new SmbException("A domain was not specified");
-            }
-            lock (Domain)
-            {
-                long now = Runtime.CurrentTimeMillis();
-                int retry = 1;
-                do
-                {
-                    if (DcListExpiration < now)
-                    {
-                        NbtAddress[] list = NbtAddress.GetAllByName(Domain, 0x1C, null, null);
-                        DcListExpiration = now + CachePolicy * 1000L;
-                        if (list != null && list.Length > 0)
-                        {
-                            DcList = list;
-                        }
-                        else
-                        {
-                            DcListExpiration = now + 1000 * 60 * 15;
-                            if (SmbTransport.LogStatic.Level >= 2)
-                            {
-                                SmbTransport.LogStatic.WriteLine("Failed to retrieve DC list from WINS");
-                            }
-                        }
-                    }
-                    int max = Math.Min(DcList.Length, LookupRespLimit);
-                    for (int j = 0; j < max; j++)
-                    {
-                        int i = DcListCounter++ % max;
-                        if (DcList[i] != null)
-                        {
-                            try
-                            {
-                                return Interrogate(DcList[i]);
-                            }
-                            catch (SmbException se)
-                            {
-                                if (SmbTransport.LogStatic.Level >= 2)
-                                {
-                                    SmbTransport.LogStatic.WriteLine("Failed validate DC: " + DcList[i]);
-                                    if (SmbTransport.LogStatic.Level > 2)
-                                    {
-                                        Runtime.PrintStackTrace(se, SmbTransport.LogStatic);
-                                    }
-                                }
-                            }
-                            DcList[i] = null;
-                        }
-                    }
-                    DcListExpiration = 0;
-                }
-                while (retry-- > 0);
-                DcListExpiration = now + 1000 * 60 * 15;
-            }
-            throw new UnknownHostException(
-                "Failed to negotiate with a suitable domain controller for " + Domain);
-        }
-
-        /// <exception cref="SharpCifs.Smb.SmbException"></exception>
-        /// <exception cref="UnknownHostException"></exception>
-        public static byte[] GetChallenge(UniAddress dc)
-        {
-            return GetChallenge(dc, 0);
-        }
-
-        /// <exception cref="SharpCifs.Smb.SmbException"></exception>
-        /// <exception cref="UnknownHostException"></exception>
-        public static byte[] GetChallenge(UniAddress dc, int port)
-        {
-            SmbTransport trans = SmbTransport.GetSmbTransport(dc, port);
-            trans.Connect();
-            return trans.Server.EncryptionKey;
-        }
-
-        /// <summary>
-        /// Authenticate arbitrary credentials represented by the
-        /// <tt>NtlmPasswordAuthentication</tt> object against the domain controller
-        /// specified by the <tt>UniAddress</tt> parameter.
-        /// </summary>
-        /// <remarks>
-        /// Authenticate arbitrary credentials represented by the
-        /// <tt>NtlmPasswordAuthentication</tt> object against the domain controller
-        /// specified by the <tt>UniAddress</tt> parameter. If the credentials are
-        /// not accepted, an <tt>SmbAuthException</tt> will be thrown. If an error
-        /// occurs an <tt>SmbException</tt> will be thrown. If the credentials are
-        /// valid, the method will return without throwing an exception. See the
-        /// last <a href="../../../faq.html">FAQ</a> question.
-        /// <p>
-        /// See also the <tt>jcifs.smb.client.logonShare</tt> property.
-        /// </remarks>
-        /// <exception cref="SmbException"></exception>
-        public static void Logon(UniAddress dc, NtlmPasswordAuthentication auth)
-        {
-            Logon(dc, -1, auth);
-        }
-
-        /// <exception cref="SharpCifs.Smb.SmbException"></exception>
-        public static void Logon(UniAddress dc, int port, NtlmPasswordAuthentication auth)
-        {
-            SmbTree tree = SmbTransport.GetSmbTransport(dc, port)
-                                       .GetSmbSession(auth)
-                                       .GetSmbTree(LogonShare, null);
-            if (LogonShare == null)
-            {
-                tree.TreeConnect(null, null);
-            }
-            else
-            {
-                Trans2FindFirst2 req = new Trans2FindFirst2("\\", "*", SmbFile.AttrDirectory);
-                Trans2FindFirst2Response resp = new Trans2FindFirst2Response();
-                tree.Send(req, resp);
-            }
-        }
-
-        /// <summary>
-        /// Clear All Cached Transport-Connections
-        /// </summary>
-        /// <remarks>
-        /// Alias of SmbTransport.ClearCachedConnections
-        /// </remarks>
-        public static void ClearCachedConnections()
-        {
-            SmbTransport.ClearCachedConnections();
-        }
-
         internal int ConnectionState;
 
         internal int Uid;
@@ -323,7 +162,7 @@ namespace SharpCifs.Smb
                 {
                     transport.Send(request, response);
                 }
-                catch (SmbException se)
+                catch (SmbException)
                 {
                     if (request is SmbComTreeConnectAndX)
                     {
@@ -409,7 +248,7 @@ namespace SharpCifs.Smb
                                     {
                                         transport.Send(request, response);
                                     }
-                                    catch (SmbAuthException sae)
+                                    catch (SmbAuthException)
                                     {
                                         throw;
                                     }
@@ -462,7 +301,7 @@ namespace SharpCifs.Smb
                                     {
                                         token = nctx.InitSecContext(token, 0, token.Length);
                                     }
-                                    catch (SmbException se)
+                                    catch (SmbException)
                                     {
                                         try
                                         {
@@ -535,7 +374,7 @@ namespace SharpCifs.Smb
                     }
                     while (state != 0);
                 }
-                catch (SmbException se)
+                catch (SmbException)
                 {
                     Logoff(true);
                     ConnectionState = 0;

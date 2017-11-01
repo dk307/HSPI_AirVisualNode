@@ -1,21 +1,21 @@
-// 
+//
 // Exceptions.cs
-//  
+//
 // Author:
 //       Lluis Sanchez Gual <lluis@novell.com>
-// 
+//
 // Copyright (c) 2010 Novell, Inc (http://www.novell.com)
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -28,14 +28,6 @@ using System;
 
 namespace SharpCifs.Util.Sharpen
 {
-    internal class VirtualMachineError : Error
-    {
-    }
-
-    internal class StackOverflowError : VirtualMachineError
-    {
-    }
-
     internal class BrokenBarrierException : Exception
     {
     }
@@ -126,7 +118,7 @@ namespace SharpCifs.Util.Sharpen
         {
         }
 
-        public ParseException(string msg, int errorOffset) 
+        public ParseException(string msg, int errorOffset)
             : base(string.Format("Msg: {0}. Error Offset: {1}", msg, errorOffset))
         {
         }
@@ -163,7 +155,6 @@ namespace SharpCifs.Util.Sharpen
 
         public UnknownHostException(string message) : base(message)
         {
-
         }
 
         public UnknownHostException(Exception ex) : base("Host not found", ex)
@@ -197,22 +188,21 @@ namespace SharpCifs.Util.Sharpen
         }
     }
 
-    class KeyManagementException : Exception
+    internal class KeyManagementException : Exception
     {
     }
 
-    class IllegalCharsetNameException : Exception
+    internal class IllegalCharsetNameException : Exception
     {
         public IllegalCharsetNameException(string msg) : base(msg)
         {
         }
     }
 
-    class UnsupportedCharsetException : Exception
+    internal class UnsupportedCharsetException : Exception
     {
         public UnsupportedCharsetException(string msg) : base(msg)
         {
         }
     }
 }
-

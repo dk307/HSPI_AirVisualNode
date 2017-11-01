@@ -35,10 +35,6 @@ namespace SharpCifs.Smb
 
         internal SmbSession Session;
 
-        internal bool InDfs;
-
-        internal bool InDomainDfs;
-
         internal int TreeNum;
 
         internal SmbTree(SmbSession session, string share, string service)
@@ -140,14 +136,7 @@ namespace SharpCifs.Smb
                     }
                 }
                 request.Tid = Tid;
-                if (InDfs
-                    && !Service.Equals("IPC")
-                    && !string.IsNullOrEmpty(request.Path))
-                {
-                    request.Flags2 = SmbConstants.Flags2ResolvePathsInDfs;
-                    request.Path = '\\' + Session.Transport().TconHostName
-                                    + '\\' + Share + request.Path;
-                }
+
                 try
                 {
                     Session.Send(request, response);
@@ -206,11 +195,10 @@ namespace SharpCifs.Smb
                     Session.Send(request, response);
                     Tid = response.Tid;
                     Service = response.Service;
-                    InDfs = response.ShareIsInDfs;
                     TreeNum = _treeConnCounter++;
                     ConnectionState = 2;
                 }
-                catch (SmbException se)
+                catch (SmbException)
                 {
                     // connected
                     TreeDisconnect(true);
@@ -237,16 +225,10 @@ namespace SharpCifs.Smb
                     {
                         Send(new SmbComTreeDisconnect(), null);
                     }
-                    catch (SmbException se)
+                    catch (SmbException)
                     {
-                        if (Session.transport.Log.Level > 1)
-                        {
-                            Runtime.PrintStackTrace(se, Session.transport.Log);
-                        }
                     }
                 }
-                InDfs = false;
-                InDomainDfs = false;
                 ConnectionState = 0;
                 Runtime.NotifyAll(Session.transport);
             }
@@ -257,9 +239,7 @@ namespace SharpCifs.Smb
             return "SmbTree[share=" + Share
                         + ",service=" + Service
                         + ",tid=" + Tid
-                        + ",inDfs=" + InDfs
-                        + ",inDomainDfs=" + InDomainDfs
-                        + ",connectionState=" + ConnectionState + "]";
+                         + ",connectionState=" + ConnectionState + "]";
         }
     }
 }

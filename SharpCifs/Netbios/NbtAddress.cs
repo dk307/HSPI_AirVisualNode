@@ -1,16 +1,16 @@
 // This code is derived from jcifs smb client library <jcifs at samba dot org>
 // Ported by J. Arturo <webmaster at komodosoft dot net>
-//  
+//
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -73,7 +73,7 @@ namespace SharpCifs.Netbios
     /// <since>jcifs-0.1</since>
     internal sealed class NbtAddress
     {
-        internal static readonly string AnyHostsName 
+        internal static readonly string AnyHostsName
             = "*\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000";
 
         /// <summary>
@@ -132,27 +132,9 @@ namespace SharpCifs.Netbios
         /// </remarks>
         public const int HNode = 3;
 
-        internal static readonly IPAddress[] Nbns 
-            = Config.GetInetAddressArray("jcifs.netbios.wins", ",", new IPAddress[0]);
-
-        private static readonly NameServiceClient Client = new NameServiceClient();
-
-        private const int DefaultCachePolicy = 30;
-
-        private static readonly int CachePolicy 
-            = Config.GetInt("jcifs.netbios.cachePolicy", DefaultCachePolicy);
-
-        private const int Forever = -1;
-
-        private static int _nbnsIndex;
-
-        private static readonly Hashtable AddressCache = new Hashtable();
-
-        private static readonly Hashtable LookupTable = new Hashtable();
-
         internal static readonly Name UnknownName = new Name("0.0.0.0", unchecked(0x00), null);
 
-        internal static readonly NbtAddress UnknownAddress 
+        internal static readonly NbtAddress UnknownAddress
             = new NbtAddress(UnknownName, 0, false, BNode);
 
         internal static readonly byte[] UnknownMacAddress =
@@ -162,24 +144,8 @@ namespace SharpCifs.Netbios
             unchecked(unchecked(0x00)),
             unchecked(unchecked(0x00)),
             unchecked(unchecked(0x00)),
-            unchecked(unchecked(0x00)) 
+            unchecked(unchecked(0x00))
         };
-
-        private sealed class CacheEntry
-        {
-            internal Name HostName;
-
-            internal NbtAddress Address;
-
-            internal long Expiration;
-
-            internal CacheEntry(Name hostName, NbtAddress address, long expiration)
-            {
-                this.HostName = hostName;
-                this.Address = address;
-                this.Expiration = expiration;
-            }
-        }
 
         private static NbtAddress Localhost;
 
@@ -188,10 +154,7 @@ namespace SharpCifs.Netbios
             IPAddress localInetAddress;
             string localHostname;
             Name localName;
-            AddressCache.Put(UnknownName, new CacheEntry(UnknownName, 
-                                                         UnknownAddress, 
-                                                         Forever));
-            localInetAddress = Client.laddr;
+            localInetAddress = Extensions.GetLocalAddresses().FirstOrDefault();
             if (localInetAddress == null)
             {
                 try
@@ -205,18 +168,6 @@ namespace SharpCifs.Netbios
             localHostname = Config.GetProperty("jcifs.netbios.hostname", null);
             if (string.IsNullOrEmpty(localHostname))
             {
-                /*
-                byte[] addr = localInetAddress.GetAddressBytes();
-
-                localHostname = "JCIFS" 
-                                + (addr[2] & unchecked((int)(0xFF))) 
-                                + "_" + (addr[3] & unchecked((int)(0xFF))) 
-                                + "_" + Hexdump.ToHexString(
-                                            (int)(new Random().NextDouble() 
-                                                    * (double)unchecked((int)(0xFF))),
-                                            2
-                                        );
-                */
                 try
                 {
                     localHostname = Dns.GetHostName();
@@ -226,190 +177,19 @@ namespace SharpCifs.Netbios
                     localHostname = "JCIFS_127_0_0_1";
                 }
             }
-            localName = new Name(localHostname, 
-                                 unchecked(0x00), 
+            localName = new Name(localHostname,
+                                 unchecked(0x00),
                                  Config.GetProperty("jcifs.netbios.scope", null));
-            Localhost = new NbtAddress(localName, 
-                                       localInetAddress.GetHashCode(), 
-                                       false, 
-                                       BNode, 
-                                       false, 
-                                       false, 
-                                       true, 
-                                       false, 
+            Localhost = new NbtAddress(localName,
+                                       localInetAddress.GetHashCode(),
+                                       false,
+                                       BNode,
+                                       false,
+                                       false,
+                                       true,
+                                       false,
                                        UnknownMacAddress);
-            CacheAddress(localName, Localhost, Forever);
         }
-
-        private static void CacheAddress(Name hostName, NbtAddress addr)
-        {
-            if (CachePolicy == 0)
-            {
-                return;
-            }
-            long expiration = -1;
-            if (CachePolicy != Forever)
-            {
-                expiration = Runtime.CurrentTimeMillis() + CachePolicy * 1000;
-            }
-            CacheAddress(hostName, addr, expiration);
-        }
-
-        private static void CacheAddress(Name hostName, NbtAddress addr, long expiration)
-        {
-            if (CachePolicy == 0)
-            {
-                return;
-            }
-            lock (AddressCache)
-            {
-                CacheEntry entry = (CacheEntry)AddressCache.Get(hostName);
-                if (entry == null)
-                {
-                    entry = new CacheEntry(hostName, addr, expiration);
-                    AddressCache.Put(hostName, entry);
-                }
-                else
-                {
-                    entry.Address = addr;
-                    entry.Expiration = expiration;
-                }
-            }
-        }
-
-        private static void CacheAddressArray(NbtAddress[] addrs)
-        {
-            if (CachePolicy == 0)
-            {
-                return;
-            }
-            long expiration = -1;
-            if (CachePolicy != Forever)
-            {
-                expiration = Runtime.CurrentTimeMillis() + CachePolicy * 1000;
-            }
-            lock (AddressCache)
-            {
-                for (int i = 0; i < addrs.Length; i++)
-                {
-                    CacheEntry entry = (CacheEntry)AddressCache.Get(addrs[i].HostName);
-                    if (entry == null)
-                    {
-                        entry = new CacheEntry(addrs[i].HostName, addrs[i], expiration);
-                        AddressCache.Put(addrs[i].HostName, entry);
-                    }
-                    else
-                    {
-                        entry.Address = addrs[i];
-                        entry.Expiration = expiration;
-                    }
-                }
-            }
-        }
-
-        private static NbtAddress GetCachedAddress(Name hostName)
-        {
-            if (CachePolicy == 0)
-            {
-                return null;
-            }
-            lock (AddressCache)
-            {
-                CacheEntry entry = (CacheEntry)AddressCache.Get(hostName);
-                if (entry != null 
-                    && entry.Expiration < Runtime.CurrentTimeMillis() 
-                    && entry.Expiration>= 0)
-                {
-                    entry = null;
-                }
-                return entry != null 
-                        ? entry.Address 
-                        : null;
-            }
-        }
-
-        /// <exception cref="UnknownHostException"></exception>
-        private static NbtAddress DoNameQuery(Name name, IPAddress svr)
-        {
-            NbtAddress addr;
-            if (name.HexCode == unchecked(0x1d) && svr == null)
-            {
-                svr = Client.Baddr;
-            }
-            // bit of a hack but saves a lookup
-            name.SrcHashCode = svr != null 
-                                ? svr.GetHashCode() 
-                                : 0;
-            addr = GetCachedAddress(name);
-            if (addr == null)
-            {
-                if ((addr = (NbtAddress)CheckLookupTable(name)) == null)
-                {
-                    try
-                    {
-                        addr = Client.GetByName(name, svr);
-                    }
-                    catch (UnknownHostException)
-                    {
-                        addr = UnknownAddress;
-                    }
-                    finally
-                    {
-                        CacheAddress(name, addr);
-                        UpdateLookupTable(name);
-                    }
-                }
-            }
-            if (addr == UnknownAddress)
-            {
-                throw new UnknownHostException(name.ToString());
-            }
-            return addr;
-        }
-
-        private static object CheckLookupTable(Name name)
-        {
-            object obj;
-            lock (LookupTable)
-            {
-                if (LookupTable.ContainsKey(name) == false)
-                {
-                    LookupTable.Put(name, name);
-                    return null;
-                }
-                while (LookupTable.ContainsKey(name))
-                {
-                    try
-                    {
-                        Runtime.Wait(LookupTable);
-                    }
-                    catch (Exception)
-                    {
-                    }
-                }
-            }
-            obj = GetCachedAddress(name);
-            if (obj == null)
-            {
-                lock (LookupTable)
-                {
-                    LookupTable.Put(name, name);
-                }
-            }
-            return obj;
-        }
-
-        private static void UpdateLookupTable(Name name)
-        {
-            lock (LookupTable)
-            {
-                //Sharpen.Collections.Remove(LOOKUP_TABLE, name);
-                LookupTable.Remove(name);
-                Runtime.NotifyAll(LookupTable);
-            }
-        }
-
-
 
         /// <summary>Retrieves the local host address.</summary>
         /// <remarks>Retrieves the local host address.</remarks>
@@ -420,12 +200,6 @@ namespace SharpCifs.Netbios
         public static NbtAddress GetLocalHost()
         {
             return Localhost;
-        }
-
-        public static NbtAddress[] GetHosts()
-        {
-            //Log.Out("NbtAddress.GetHosts");
-            return new NameServiceClient().GetHosts();
         }
 
         public static Name GetLocalName()
@@ -475,31 +249,16 @@ namespace SharpCifs.Netbios
         /// <exception cref="UnknownHostException"></exception>
         public static NbtAddress GetByName(string host, int type, string scope, IPAddress svr)
         {
-            if (string.IsNullOrEmpty(host))
-            {
-                return GetLocalHost();
-            }
-            if (!char.IsDigit(host[0]))
-            {
-                return DoNameQuery(new Name(host, type, scope), svr);
-            }
             int ip = unchecked(0x00);
             int hitDots = 0;
             char[] data = host.ToCharArray();
             for (int i = 0; i < data.Length; i++)
             {
                 char c = data[i];
-                if (c < 48 || c > 57)
-                {
-                    return DoNameQuery(new Name(host, type, scope), svr);
-                }
+
                 int b = unchecked(0x00);
                 while (c != '.')
                 {
-                    if (c < 48 || c > 57)
-                    {
-                        return DoNameQuery(new Name(host, type, scope), svr);
-                    }
                     b = b * 10 + c - '0';
                     if (++i >= data.Length)
                     {
@@ -507,114 +266,12 @@ namespace SharpCifs.Netbios
                     }
                     c = data[i];
                 }
-                if (b > unchecked(0xFF))
-                {
-                    return DoNameQuery(new Name(host, type, scope), svr);
-                }
+
                 ip = (ip << 8) + b;
                 hitDots++;
             }
-            if (hitDots != 4 || host.EndsWith("."))
-            {
-                return DoNameQuery(new Name(host, type, scope), svr);
-            }
+
             return new NbtAddress(UnknownName, ip, false, BNode);
-        }
-
-        /// <exception cref="UnknownHostException"></exception>
-        public static NbtAddress[] GetAllByName(string host, 
-                                                int type, 
-                                                string scope, 
-                                                IPAddress svr)
-        {
-            return Client.GetAllByName(new Name(host, type, scope), svr);
-        }
-
-        /// <summary>Retrieve all addresses of a host by it's address.</summary>
-        /// <remarks>
-        /// Retrieve all addresses of a host by it's address. NetBIOS hosts can
-        /// have many names for a given IP address. The name and IP address make the
-        /// NetBIOS address. This provides a way to retrieve the other names for a
-        /// host with the same IP address.
-        /// </remarks>
-        /// <param name="host">hostname to lookup all addresses for</param>
-        /// <exception cref="UnknownHostException">if there is an error resolving the name
-        /// </exception>
-        public static NbtAddress[] GetAllByAddress(string host)
-        {
-            return GetAllByAddress(GetByName(host, unchecked(0x00), null));
-        }
-
-        /// <summary>Retrieve all addresses of a host by it's address.</summary>
-        /// <remarks>
-        /// Retrieve all addresses of a host by it's address. NetBIOS hosts can
-        /// have many names for a given IP address. The name and IP address make
-        /// the NetBIOS address. This provides a way to retrieve the other names
-        /// for a host with the same IP address.  See
-        /// <see cref="GetByName(string)">GetByName(string)</see>
-        /// for a description of <code>type</code>
-        /// and <code>scope</code>.
-        /// </remarks>
-        /// <param name="host">hostname to lookup all addresses for</param>
-        /// <param name="type">the hexcode of the name</param>
-        /// <param name="scope">the scope of the name</param>
-        /// <exception cref="UnknownHostException">if there is an error resolving the name
-        /// </exception>
-        public static NbtAddress[] GetAllByAddress(string host, int type, string scope)
-        {
-            return GetAllByAddress(GetByName(host, type, scope));
-        }
-
-        /// <summary>Retrieve all addresses of a host by it's address.</summary>
-        /// <remarks>
-        /// Retrieve all addresses of a host by it's address. NetBIOS hosts can
-        /// have many names for a given IP address. The name and IP address make the
-        /// NetBIOS address. This provides a way to retrieve the other names for a
-        /// host with the same IP address.
-        /// </remarks>
-        /// <param name="addr">the address to query</param>
-        /// <exception cref="UnknownHostException">if address cannot be resolved</exception>
-        public static NbtAddress[] GetAllByAddress(NbtAddress addr)
-        {
-            try
-            {
-                NbtAddress[] addrs = Client.GetNodeStatus(addr);
-                CacheAddressArray(addrs);
-                return addrs;
-            }
-            catch (UnknownHostException)
-            {
-                throw new UnknownHostException(
-                    "no name with type 0x" + Hexdump.ToHexString(addr.HostName.HexCode, 2) 
-                    + (((addr.HostName.Scope == null) || (addr.HostName.Scope.Length == 0)) 
-                        ? " with no scope" 
-                        : " with scope " + addr.HostName.Scope) 
-                    + " for host " + addr.GetHostAddress()
-                );
-            }
-        }
-
-        public static IPAddress GetWinsAddress()
-        {
-            return Nbns.Length == 0 ? null : Nbns[_nbnsIndex];
-        }
-
-        public static bool IsWins(IPAddress svr)
-        {
-            for (int i = 0; svr != null && i < Nbns.Length; i++)
-            {
-                if (svr.GetHashCode() == Nbns[i].GetHashCode())
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        internal static IPAddress SwitchWins()
-        {
-            _nbnsIndex = (_nbnsIndex + 1) < Nbns.Length ? _nbnsIndex + 1 : 0;
-            return Nbns.Length == 0 ? null : Nbns[_nbnsIndex];
         }
 
         internal Name HostName;
@@ -647,14 +304,14 @@ namespace SharpCifs.Netbios
             this.NodeType = nodeType;
         }
 
-        internal NbtAddress(Name hostName, 
-                            int address, 
-                            bool groupName, 
-                            int nodeType, 
-                            bool isBeingDeleted, 
-                            bool isInConflict, 
-                            bool isActive, 
-                            bool isPermanent, 
+        internal NbtAddress(Name hostName,
+                            int address,
+                            bool groupName,
+                            int nodeType,
+                            bool isBeingDeleted,
+                            bool isInConflict,
+                            bool isActive,
+                            bool isPermanent,
                             byte[] macAddress)
         {
             this.HostName = hostName;
@@ -667,198 +324,6 @@ namespace SharpCifs.Netbios
             this.isPermanent = isPermanent;
             this.MacAddress = macAddress;
             IsDataFromNodeStatus = true;
-        }
-
-        public string FirstCalledName()
-        {
-            CalledName = HostName.name;
-            if (char.IsDigit(CalledName[0]))
-            {
-                int i;
-                int len;
-                int dots;
-                char[] data;
-                i = dots = 0;
-                len = CalledName.Length;
-                data = CalledName.ToCharArray();
-                while (i < len && char.IsDigit(data[i++]))
-                {
-                    if (i == len && dots == 3)
-                    {
-                        // probably an IP address
-                        CalledName = SmbserverName;
-                        break;
-                    }
-                    if (i < len && data[i] == '.')
-                    {
-                        dots++;
-                        i++;
-                    }
-                }
-            }
-            else
-            {
-                switch (HostName.HexCode)
-                {
-                    case unchecked(0x1B):
-                    case unchecked(0x1C):
-                    case unchecked(0x1D):
-                        {
-                            CalledName = SmbserverName;
-                            break;
-                        }
-                }
-            }
-            return CalledName;
-        }
-
-        public string NextCalledName()
-        {
-            if (CalledName == HostName.name)
-            {
-                CalledName = SmbserverName;
-            }
-            else
-            {
-                if (CalledName == SmbserverName)
-                {
-                    NbtAddress[] addrs;
-                    try
-                    {
-                        addrs = Client.GetNodeStatus(this);
-                        if (HostName.HexCode == unchecked(0x1D))
-                        {
-                            for (int i = 0; i < addrs.Length; i++)
-                            {
-                                if (addrs[i].HostName.HexCode == unchecked(0x20))
-                                {
-                                    return addrs[i].HostName.name;
-                                }
-                            }
-                            return null;
-                        }
-                        if (IsDataFromNodeStatus)
-                        {
-                            CalledName = null;
-                            return HostName.name;
-                        }
-                    }
-                    catch (UnknownHostException)
-                    {
-                        CalledName = null;
-                    }
-                }
-                else
-                {
-                    CalledName = null;
-                }
-            }
-            return CalledName;
-        }
-
-        /// <exception cref="UnknownHostException"></exception>
-        internal void CheckData()
-        {
-            if (HostName == UnknownName)
-            {
-                GetAllByAddress(this);
-            }
-        }
-
-        /// <exception cref="UnknownHostException"></exception>
-        internal void CheckNodeStatusData()
-        {
-            if (IsDataFromNodeStatus == false)
-            {
-                GetAllByAddress(this);
-            }
-        }
-
-        /// <summary>Determines if the address is a group address.</summary>
-        /// <remarks>
-        /// Determines if the address is a group address. This is also
-        /// known as a workgroup name or group name.
-        /// </remarks>
-        /// <exception cref="UnknownHostException">if the host cannot be resolved to find out.
-        /// </exception>
-        public bool IsGroupAddress()
-        {
-            CheckData();
-            return GroupName;
-        }
-
-        /// <summary>Checks the node type of this address.</summary>
-        /// <remarks>Checks the node type of this address.</remarks>
-        /// <returns>
-        /// 
-        /// <see cref="BNode">B_NODE</see>
-        /// ,
-        /// <see cref="PNode">P_NODE</see>
-        /// ,
-        /// <see cref="MNode">M_NODE</see>
-        /// ,
-        /// <see cref="HNode">H_NODE</see>
-        /// </returns>
-        /// <exception cref="UnknownHostException">if the host cannot be resolved to find out.
-        /// </exception>
-        public int GetNodeType()
-        {
-            CheckData();
-            return NodeType;
-        }
-
-        /// <summary>Determines if this address in the process of being deleted.</summary>
-        /// <remarks>Determines if this address in the process of being deleted.</remarks>
-        /// <exception cref="UnknownHostException">if the host cannot be resolved to find out.
-        /// </exception>
-        public bool IsBeingDeleted()
-        {
-            CheckNodeStatusData();
-            return isBeingDeleted;
-        }
-
-        /// <summary>Determines if this address in conflict with another address.</summary>
-        /// <remarks>Determines if this address in conflict with another address.</remarks>
-        /// <exception cref="UnknownHostException">if the host cannot be resolved to find out.
-        /// </exception>
-        public bool IsInConflict()
-        {
-            CheckNodeStatusData();
-            return isInConflict;
-        }
-
-        /// <summary>Determines if this address is active.</summary>
-        /// <remarks>Determines if this address is active.</remarks>
-        /// <exception cref="UnknownHostException">if the host cannot be resolved to find out.
-        /// </exception>
-        public bool IsActive()
-        {
-            CheckNodeStatusData();
-            return isActive;
-        }
-
-        /// <summary>Determines if this address is set to be permanent.</summary>
-        /// <remarks>Determines if this address is set to be permanent.</remarks>
-        /// <exception cref="UnknownHostException">if the host cannot be resolved to find out.
-        /// </exception>
-        public bool IsPermanent()
-        {
-            CheckNodeStatusData();
-            return isPermanent;
-        }
-
-        /// <summary>Retrieves the MAC address of the remote network interface.</summary>
-        /// <remarks>Retrieves the MAC address of the remote network interface. Samba returns all zeros.
-        /// </remarks>
-        /// <returns>the MAC address as an array of six bytes</returns>
-        /// <exception cref="UnknownHostException">
-        /// if the host cannot be resolved to
-        /// determine the MAC address.
-        /// </exception>
-        public byte[] GetMacAddress()
-        {
-            CheckNodeStatusData();
-            return MacAddress;
         }
 
         /// <summary>The hostname of this address.</summary>
@@ -912,9 +377,9 @@ namespace SharpCifs.Netbios
         /// </summary>
         public string GetHostAddress()
         {
-            return (((int)(((uint)Address) >> 24)) & unchecked(0xFF)) 
-                    + "." + (((int)(((uint)Address) >> 16)) & unchecked(0xFF)) 
-                    + "." + (((int)(((uint)Address) >> 8)) & unchecked(0xFF)) 
+            return (((int)(((uint)Address) >> 24)) & unchecked(0xFF))
+                    + "." + (((int)(((uint)Address) >> 16)) & unchecked(0xFF))
+                    + "." + (((int)(((uint)Address) >> 8)) & unchecked(0xFF))
                     + "." + (((int)(((uint)Address) >> 0)) & unchecked(0xFF));
         }
 
@@ -948,8 +413,8 @@ namespace SharpCifs.Netbios
         /// </remarks>
         public override bool Equals(object obj)
         {
-            return (obj != null) 
-                    && (obj is NbtAddress) 
+            return (obj != null)
+                    && (obj is NbtAddress)
                     && (((NbtAddress)obj).Address == Address);
         }
 

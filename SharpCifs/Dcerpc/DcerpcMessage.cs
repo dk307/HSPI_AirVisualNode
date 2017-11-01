@@ -47,15 +47,6 @@ namespace SharpCifs.Dcerpc
             Flags |= flag;
         }
 
-        public virtual DcerpcException GetResult()
-        {
-            if (Result != 0)
-            {
-                return new DcerpcException(Result);
-            }
-            return null;
-        }
-
         internal virtual void Encode_header(NdrBuffer buf)
         {
             buf.Enc_ndr_small(5);

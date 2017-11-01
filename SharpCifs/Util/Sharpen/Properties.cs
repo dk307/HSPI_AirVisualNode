@@ -6,7 +6,6 @@ namespace SharpCifs.Util.Sharpen
     {
         protected Hashtable _properties;
 
-
         public Properties()
         {
             this._properties = new Hashtable();
@@ -32,50 +31,14 @@ namespace SharpCifs.Util.Sharpen
 
         public object GetProperty(object key)
         {
-            return this._properties.Keys.Contains(key) 
-                ? this._properties[key] 
+            return this._properties.Keys.Contains(key)
+                ? this._properties[key]
                 : null;
         }
 
         public object GetProperty(object key, object def)
         {
             return this._properties.Get(key) ?? def;
-        }
-
-        public void Load(InputStream input)
-        {
-            using (var reader = new StreamReader(input))
-            {
-                while (!reader.EndOfStream)
-                {
-                    var line = reader.ReadLine();
-
-                    if (string.IsNullOrEmpty(line))
-                        continue;
-
-                    var tokens = line.Split('=');
-
-                    if (tokens.Length < 2)
-                        continue;
-
-                    this._properties.Put(tokens[0], tokens[1]);
-                }
-            }
-        }
-
-        public void Store(OutputStream output)
-        {
-            using (var writer = new StreamWriter(output))
-            {
-                foreach (var pair in this._properties)
-                    writer.WriteLine($"{pair.Key}={pair.Value}");
-            }
-        }
-
-        public void Store(TextWriter output)
-        {
-            foreach (var pair in this._properties)
-                output.WriteLine($"{pair.Key}={pair.Value}");
         }
     }
 }

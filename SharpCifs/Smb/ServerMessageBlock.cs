@@ -5,12 +5,12 @@
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-//  
+//
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-//  
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -89,15 +89,6 @@ namespace SharpCifs.Smb
             long t = ((long)hi << (int)32L) | (low & unchecked((long)(0xFFFFFFFFL)));
             t = (t / 10000L - SmbConstants.MillisecondsBetween1970And1601);
             return t;
-        }
-
-        internal static void WriteTime(long t, byte[] dst, int dstIndex)
-        {
-            if (t != 0L)
-            {
-                t = (t + SmbConstants.MillisecondsBetween1970And1601) * 10000L;
-            }
-            WriteInt8(t, dst, dstIndex);
         }
 
         internal static long ReadUTime(byte[] buffer, int bufferIndex)
@@ -707,20 +698,20 @@ namespace SharpCifs.Smb
                         break;
                     }
             }
-            string str = ErrorCode == 0 
-                            ? "0" 
+            string str = ErrorCode == 0
+                            ? "0"
                             : SmbException.GetMessageByCode(ErrorCode);
-            return "command=" + c 
-                    + ",received=" + Received 
+            return "command=" + c
+                    + ",received=" + Received
                     + ",errorCode=" + str
-                    + ",flags=0x" + Hexdump.ToHexString(Flags & 0xFF, 4) 
-                    + ",flags2=0x" + Hexdump.ToHexString(Flags2, 4) 
-                    + ",signSeq=" + SignSeq 
-                    + ",tid=" + Tid 
-                    + ",pid=" + Pid 
-                    + ",uid=" + Uid 
-                    + ",mid=" + Mid 
-                    + ",wordCount=" + WordCount 
+                    + ",flags=0x" + Hexdump.ToHexString(Flags & 0xFF, 4)
+                    + ",flags2=0x" + Hexdump.ToHexString(Flags2, 4)
+                    + ",signSeq=" + SignSeq
+                    + ",tid=" + Tid
+                    + ",pid=" + Pid
+                    + ",uid=" + Uid
+                    + ",mid=" + Mid
+                    + ",wordCount=" + WordCount
                     + ",byteCount=" + ByteCount;
         }
     }

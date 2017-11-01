@@ -76,14 +76,15 @@ namespace Hspi.Connector
 
                 string lastString = null;
 
-                using (Stream fileStream = await smbFile.GetInputStreamAsync())
+                using (Stream fileStream = smbFile.GetInputStream())
                 {
-                    logger.LogDebug(Invariant($"Reading from {path} with size {fileStream.Length} Bytes"));
+                    var length = fileStream.Length;
+                    logger.LogDebug(Invariant($"Reading from {path} with size {length} Bytes"));
 
-                    int bufferSize = 256;
+                    int bufferSize = 16 * 1024;
+                    fileStream.Seek(-Math.Min(bufferSize, length), SeekOrigin.End);
 
-                    fileStream.Seek(0, SeekOrigin.End);
-                    fileStream.Seek(-Math.Min(bufferSize, fileStream.Length), SeekOrigin.Current);
+                    var pos = fileStream.Position;
 
                     using (var reader = new StreamReader(fileStream, Encoding.ASCII, false, bufferSize))
                     {

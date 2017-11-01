@@ -1,16 +1,16 @@
 // This code is derived from jcifs smb client library <jcifs at samba dot org>
 // Ported by J. Arturo <webmaster at komodosoft dot net>
-//  
+//
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -34,9 +34,6 @@ namespace SharpCifs.Smb
         internal static readonly SmbComNegotiate NegotiateRequest = new SmbComNegotiate();
 
         internal static LogStream LogStatic = LogStream.GetInstance();
-
-        internal static Hashtable DfsRoots = null;
-
 
         internal static SmbTransport GetSmbTransport(UniAddress address, int port)
         {
@@ -85,90 +82,6 @@ namespace SharpCifs.Smb
                 return conn;
             }
         }
-
-
-        /// <summary>
-        /// Clear All Cached Transport-Connections
-        /// </summary>
-        public static void ClearCachedConnections(bool force = false)
-        {
-            lock (typeof(SmbTransport))
-            lock (SmbConstants.Connections)
-            {
-                var failedTransport = new List<SmbTransport>();
-
-                foreach (var transport in SmbConstants.Connections)
-                {
-                    //強制破棄フラグONのとき、接続状態がどうであれ破棄する。
-                    if (force)
-                    {
-                        SmbConstants.Connections.Remove(transport);
-
-                        try { transport?.Disconnect(true); }
-                        catch (Exception) { }
-
-                        continue;
-                    }
-
-                    //即座に異常と分かるTransportは接続試行せず破棄対象にする。
-                    if (transport == null
-                        || transport.Socket == null
-                        || !transport.Socket.Connected)
-                    {
-                        SmbConstants.Connections.Remove(transport);
-
-                        try { transport?.Disconnect(true); }
-                        catch (Exception) { }
-
-                        continue;
-                    }
-
-
-                    //現在の接続状態を検証する。
-                    //https://msdn.microsoft.com/ja-jp/library/system.net.sockets.socket.connected(v=vs.110).aspx
-                    var isSocketBlocking = transport.Socket.Blocking;
-                    var isConnected = false;
-                    try
-                    {
-                        var tmpBytes = new byte[1];
-                        transport.Socket.Blocking = false;
-                        transport.Socket.Send(tmpBytes, 0, 0);
-                        isConnected = true;
-                    }
-                    catch (SocketException e)
-                    {
-                        if (e.SocketErrorCode == SocketError.WouldBlock)
-                        {
-                            //現在も接続中
-                            isConnected = true;
-                        }
-                        else
-                        {
-                            //切断されている
-                            isConnected = false;
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        //切断されている
-                        isConnected = false;
-                    }
-                    finally
-                    {
-                        transport.Socket.Blocking = isSocketBlocking;
-                    }
-
-                    if (!isConnected)
-                    {
-                        SmbConstants.Connections.Remove(transport);
-
-                        try { transport?.Disconnect(true); }
-                        catch (Exception) { }
-                    }
-                }
-            }
-        }
-
 
         internal class ServerData
         {
@@ -359,104 +272,13 @@ namespace SharpCifs.Smb
         }
 
         /// <exception cref="System.IO.IOException"></exception>
-        internal virtual void Ssn139()
-        {
-            Name calledName = new Name(Address.FirstCalledName(), 0x20, null);
-            do
-            {
-                Socket = new SocketEx(AddressFamily.InterNetwork,
-                                      SocketType.Stream,
-                                      ProtocolType.Tcp);
-
-                //TCPローカルポートは、毎回空いているものを使う。
-                //https://blogs.msdn.microsoft.com/dgorti/2005/09/18/only-one-usage-of-each-socket-address-protocolnetwork-addressport-is-normally-permitted/
-                Socket.Bind(new IPEndPoint(LocalAddr, 0));
-
-                Socket.Connect(new IPEndPoint(IPAddress.Parse(Address.GetHostAddress()), 
-                                              139),
-                               SmbConstants.ConnTimeout);
-                
-                Socket.SoTimeOut = SmbConstants.SoTimeout;
-
-                Out = Socket.GetOutputStream();
-                In = Socket.GetInputStream();
-                SessionServicePacket ssp = new SessionRequestPacket(calledName,
-                                                                    NbtAddress.GetLocalName());
-                Out.Write(Sbuf, 0, ssp.WriteWireFormat(Sbuf, 0));
-                if (Readn(In, Sbuf, 0, 4) < 4)
-                {
-                    try
-                    {
-                        //Socket.`Close` method deleted
-                        //Socket.Close();
-                        Socket.Dispose();
-                    }
-                    catch (IOException)
-                    {
-                    }
-                    throw new SmbException("EOF during NetBIOS session request");
-                }
-                switch (Sbuf[0] & 0xFF)
-                {
-                    case SessionServicePacket.PositiveSessionResponse:
-                        {
-                            if (Log.Level >= 4)
-                            {
-                                Log.WriteLine("session established ok with " + Address);
-                            }
-                            return;
-                        }
-
-                    case SessionServicePacket.NegativeSessionResponse:
-                        {
-                            int errorCode = In.Read() & 0xFF;
-                            switch (errorCode)
-                            {
-                                case NbtException.CalledNotPresent:
-                                case NbtException.NotListeningCalled:
-                                    {
-                                        //Socket.`Close` method deleted
-                                        //Socket.Close();
-                                        Socket.Dispose();
-                                        break;
-                                    }
-
-                                default:
-                                    {
-                                        Disconnect(true);
-                                        throw new NbtException(NbtException.ErrSsnSrvc,
-                                                               errorCode);
-                                    }
-                            }
-                            break;
-                        }
-
-                    case -1:
-                        {
-                            Disconnect(true);
-                            throw new NbtException(NbtException.ErrSsnSrvc,
-                                                   NbtException.ConnectionRefused);
-                        }
-
-                    default:
-                        {
-                            Disconnect(true);
-                            throw new NbtException(NbtException.ErrSsnSrvc, 0);
-                        }
-                }
-            }
-            while ((calledName.name = Address.NextCalledName()) != null);
-            throw new IOException("Failed to establish session with " + Address);
-        }
-
-        /// <exception cref="System.IO.IOException"></exception>
         private void Negotiate(int port, ServerMessageBlock resp)
         {
             lock (Sbuf)
             {
                 if (port == 139)
                 {
-                    Ssn139();
+                    throw new NotSupportedException("Port 139");
                 }
                 else
                 {
@@ -473,7 +295,7 @@ namespace SharpCifs.Smb
                     //https://blogs.msdn.microsoft.com/dgorti/2005/09/18/only-one-usage-of-each-socket-address-protocolnetwork-addressport-is-normally-permitted/
                     Socket.Bind(new IPEndPoint(LocalAddr, 0));
 
-                    Socket.Connect(new IPEndPoint(IPAddress.Parse(Address.GetHostAddress()), 
+                    Socket.Connect(new IPEndPoint(IPAddress.Parse(Address.GetHostAddress()),
                                                   port), // <- 445
                                    SmbConstants.ConnTimeout);
 
@@ -623,7 +445,6 @@ namespace SharpCifs.Smb
                 Socket = null;
                 TconHostName = null;
             }
-
         }
 
         /// <exception cref="System.IO.IOException"></exception>
@@ -839,13 +660,7 @@ namespace SharpCifs.Smb
                         {
                             throw new SmbException(resp.ErrorCode, null);
                         }
-                        DfsReferral dr = GetDfsReferrals(req.Auth, req.Path, 1);
-                        if (dr == null)
-                        {
-                            throw new SmbException(resp.ErrorCode, null);
-                        }
-                        SmbFile.Dfs.Insert(req.Path, dr);
-                        throw dr;
+                        throw new NotSupportedException("Dfs Not Supported");
                     }
 
                 case unchecked((int)(0x80000005)):
@@ -971,7 +786,7 @@ namespace SharpCifs.Smb
                     Sendrecv(request, response, SmbConstants.ResponseTimeout);
                 }
             }
-            catch (SmbException se)
+            catch (SmbException)
             {
                 throw;
             }
@@ -1012,92 +827,6 @@ namespace SharpCifs.Smb
             {
                 result[ri++] = string.Empty;
             }
-        }
-
-        /// <exception cref="SharpCifs.Smb.SmbException"></exception>
-        internal virtual DfsReferral GetDfsReferrals(NtlmPasswordAuthentication auth,
-                                                     string path,
-                                                     int rn)
-        {
-            SmbTree ipc = GetSmbSession(auth).GetSmbTree("IPC$", null);
-            Trans2GetDfsReferralResponse resp = new Trans2GetDfsReferralResponse();
-            ipc.Send(new Trans2GetDfsReferral(path), resp);
-            if (resp.NumReferrals == 0)
-            {
-                return null;
-            }
-            if (rn == 0 || resp.NumReferrals < rn)
-            {
-                rn = resp.NumReferrals;
-            }
-            DfsReferral dr = new DfsReferral();
-            string[] arr = new string[4];
-            long expiration = Runtime.CurrentTimeMillis() + Dfs.Ttl * 1000;
-            int di = 0;
-            for (;;)
-            {
-                dr.ResolveHashes = auth.HashesExternal;
-                dr.Ttl = resp.Referrals[di].Ttl;
-                dr.Expiration = expiration;
-                if (path.Equals(string.Empty))
-                {
-                    dr.Server = Runtime.Substring(resp.Referrals[di].Path, 1).ToLower();
-                }
-                else
-                {
-                    DfsPathSplit(resp.Referrals[di].Node, arr);
-                    dr.Server = arr[1];
-                    dr.Share = arr[2];
-                    dr.Path = arr[3];
-                }
-                dr.PathConsumed = resp.PathConsumed;
-                di++;
-                if (di == rn)
-                {
-                    break;
-                }
-                dr.Append(new DfsReferral());
-                dr = dr.Next;
-            }
-            return dr.Next;
-        }
-
-        /// <exception cref="SharpCifs.Smb.SmbException"></exception>
-        internal virtual DfsReferral[] __getDfsReferrals(NtlmPasswordAuthentication auth,
-                                                         string path,
-                                                         int rn)
-        {
-            SmbTree ipc = GetSmbSession(auth).GetSmbTree("IPC$", null);
-            Trans2GetDfsReferralResponse resp = new Trans2GetDfsReferralResponse();
-            ipc.Send(new Trans2GetDfsReferral(path), resp);
-            if (rn == 0 || resp.NumReferrals < rn)
-            {
-                rn = resp.NumReferrals;
-            }
-            DfsReferral[] drs = new DfsReferral[rn];
-            string[] arr = new string[4];
-            long expiration = Runtime.CurrentTimeMillis() + Dfs.Ttl * 1000;
-            for (int di = 0; di < drs.Length; di++)
-            {
-                DfsReferral dr = new DfsReferral();
-                dr.ResolveHashes = auth.HashesExternal;
-                dr.Ttl = resp.Referrals[di].Ttl;
-                dr.Expiration = expiration;
-                if (path.Equals(string.Empty))
-                {
-                    dr.Server = Runtime.Substring(resp.Referrals[di].Path, 1).ToLower();
-                }
-                else
-                {
-                    DfsPathSplit(resp.Referrals[di].Node, arr);
-                    dr.Server = arr[1];
-                    dr.Share = arr[2];
-                    dr.Path = arr[3];
-                }
-                dr.PathConsumed = resp.PathConsumed;
-                drs[di] = dr;
-            }
-            return drs;
         }
     }
 }

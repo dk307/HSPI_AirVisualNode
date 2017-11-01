@@ -1,16 +1,16 @@
 // This code is derived from jcifs smb client library <jcifs at samba dot org>
 // Ported by J. Arturo <webmaster at komodosoft dot net>
-//  
+//
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -19,13 +19,13 @@ using System.IO;
 
 namespace SharpCifs.Util
 {
-    internal class Hexdump
+    internal static class Hexdump
     {
         private static readonly string Nl = @"\r\n"; //Runtime.GetProperty("line.separator");
 
         private static readonly int NlLength = Nl.Length;
 
-        private static readonly char[] SpaceChars = 
+        private static readonly char[] SpaceChars =
         {
             ' ', ' ', ' ', ' ', ' '
             , ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '
@@ -33,9 +33,8 @@ namespace SharpCifs.Util
             , ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '
         };
 
-        public static readonly char[] HexDigits 
+        public static readonly char[] HexDigits
             = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
-
 
         private static bool IsIsoControl(char c)
         {

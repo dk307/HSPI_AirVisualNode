@@ -1,16 +1,16 @@
 // This code is derived from jcifs smb client library <jcifs at samba dot org>
 // Ported by J. Arturo <webmaster at komodosoft dot net>
-//  
+//
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -82,15 +82,10 @@ namespace SharpCifs.Smb
             this.File = file;
             this._openFlags = openFlags & 0xFFFF;
             _access = ((int)(((uint)openFlags) >> 16)) & 0xFFFF;
-            if (file.Type != SmbFile.TypeNamedPipe)
-            {
-                file.Open(openFlags, _access, SmbFile.AttrNormal, 0);
-                this._openFlags &= ~(SmbFile.OCreat | SmbFile.OTrunc);
-            }
-            else
-            {
-                file.Connect0();
-            }
+
+            file.Open(openFlags, _access, SmbFile.AttrNormal, 0);
+            this._openFlags &= ~(SmbFile.OCreat | SmbFile.OTrunc);
+
             _readSize = Math.Min(file.Tree.Session.transport.RcvBufSize - 70,
                                  file.Tree.Session.transport.Server.MaxBufferSize - 70);
         }
@@ -185,10 +180,6 @@ namespace SharpCifs.Smb
             }
 
             SmbComReadAndXResponse response = new SmbComReadAndXResponse(b, off);
-            if (File.Type == SmbFile.TypeNamedPipe)
-            {
-                response.ResponseTimeout = 0;
-            }
 
             int r;
             int n;
@@ -205,20 +196,12 @@ namespace SharpCifs.Smb
                 try
                 {
                     SmbComReadAndX request = new SmbComReadAndX(File.Fid, _fp, r, null);
-                    if (File.Type == SmbFile.TypeNamedPipe)
-                    {
-                        request.MinCount = request.MaxCount = request.Remaining = 1024;
-                    }
+
                     //ここで読み込んでいるらしい。
                     File.Send(request, response);
                 }
                 catch (SmbException se)
                 {
-                    if (File.Type == SmbFile.TypeNamedPipe
-                        && se.GetNtStatus() == NtStatus.NtStatusPipeBroken)
-                    {
-                        return -1;
-                    }
                     throw SeToIoe(se);
                 }
 
@@ -247,32 +230,7 @@ namespace SharpCifs.Smb
         /// <exception cref="System.IO.IOException"></exception>
         public override int Available()
         {
-            SmbNamedPipe pipe;
-            TransPeekNamedPipe req;
-            TransPeekNamedPipeResponse resp;
-            if (File.Type != SmbFile.TypeNamedPipe)
-            {
-                return 0;
-            }
-            try
-            {
-                pipe = (SmbNamedPipe)File;
-                File.Open(SmbFile.OExcl, pipe.PipeType & 0xFF0000, SmbFile.AttrNormal, 0);
-                req = new TransPeekNamedPipe(File.Unc, File.Fid);
-                resp = new TransPeekNamedPipeResponse(pipe);
-                pipe.Send(req, resp);
-                if (resp.status == TransPeekNamedPipeResponse.StatusDisconnected
-                    || resp.status == TransPeekNamedPipeResponse.StatusServerEndClosed)
-                {
-                    File.Opened = false;
-                    return 0;
-                }
-                return resp.Available;
-            }
-            catch (SmbException se)
-            {
-                throw SeToIoe(se);
-            }
+            return 0;
         }
 
         /// <summary>Skip n bytes of data on this stream.</summary>
@@ -292,7 +250,6 @@ namespace SharpCifs.Smb
             }
             return 0;
         }
-
 
         /// <summary>
         /// Position in Stream
@@ -317,7 +274,7 @@ namespace SharpCifs.Smb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         /// <remarks>
@@ -336,6 +293,5 @@ namespace SharpCifs.Smb
         {
             get { return File.Length(); }
         }
-
     }
 }
