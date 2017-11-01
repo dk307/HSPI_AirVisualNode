@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SharpCifs.Util.DbsHelper
 {
-    public class Log
+    internal class Log
     {
         /// <summary>
         /// コンソールへのログ出力を行うか否か

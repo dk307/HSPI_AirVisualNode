@@ -18,7 +18,7 @@ using SharpCifs.Dcerpc.Ndr;
 
 namespace SharpCifs.Dcerpc.Msrpc
 {
-    public class MsrpcQueryInformationPolicy : Lsarpc.LsarQueryInformationPolicy
+    internal class MsrpcQueryInformationPolicy : Lsarpc.LsarQueryInformationPolicy
     {
         public MsrpcQueryInformationPolicy(LsaPolicyHandle policyHandle, short level, NdrObject info)
             : base(policyHandle, level, info)

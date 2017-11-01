@@ -3,7 +3,7 @@ using System.IO;
 
 namespace SharpCifs.Util.Sharpen
 {
-    public class OutputStream : IDisposable
+    internal class OutputStream : IDisposable
     {
         protected Stream Wrapped;
 

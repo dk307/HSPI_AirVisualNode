@@ -13,12 +13,12 @@ using System.Security.Cryptography;
 
 #if SILVERLIGHT
 #else
-//public class MD5Managed : MD5
+//internal class MD5Managed : MD5
 #endif
 
 namespace SharpCifs.Util.Sharpen
 {
-    public class Md5Managed : HashAlgorithm
+    internal class Md5Managed : HashAlgorithm
 
     {
         public new static Md5Managed Create()

@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 
 namespace SharpCifs.Util.Sharpen
 {
-    public abstract class MessageDigest
+    internal abstract class MessageDigest
     {
         public void Digest(byte[] buffer, int o, int len)
         {
@@ -43,7 +43,7 @@ namespace SharpCifs.Util.Sharpen
     }
 
 
-    public class MessageDigest<TAlgorithm> 
+    internal class MessageDigest<TAlgorithm> 
         : MessageDigest where TAlgorithm : HashAlgorithm //, new() //use static `Create` method
     {
         private TAlgorithm _hash;

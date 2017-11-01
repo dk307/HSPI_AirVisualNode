@@ -18,7 +18,7 @@ using System.IO;
 
 namespace SharpCifs.Smb
 {
-    public class SecurityDescriptor
+    internal class SecurityDescriptor
     {
         public int Type;
 

@@ -33,7 +33,7 @@ namespace SharpCifs.Util
     /// <p><b>$Revision: 1.2 $</b>
     /// </remarks>
     /// <author>Raif S. Naffah</author>
-    public class Md4 : MessageDigest
+    internal class Md4 : MessageDigest
     {
         /// <summary>The size in bytes of the input block to the tranformation algorithm.</summary>
         /// <remarks>The size in bytes of the input block to the tranformation algorithm.</remarks>

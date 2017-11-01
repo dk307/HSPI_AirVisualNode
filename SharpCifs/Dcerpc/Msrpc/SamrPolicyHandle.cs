@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 namespace SharpCifs.Dcerpc.Msrpc
 {
-    public class SamrPolicyHandle : Rpc.PolicyHandle
+    internal class SamrPolicyHandle : Rpc.PolicyHandle
     {
         /// <exception cref="System.IO.IOException"></exception>
         public SamrPolicyHandle(DcerpcHandle handle, string server, int access)

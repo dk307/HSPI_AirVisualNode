@@ -18,7 +18,7 @@ using SharpCifs.Dcerpc.Ndr;
 
 namespace SharpCifs.Dcerpc.Msrpc
 {
-    public class Samr
+    internal class Samr
     {
         public static string GetSyntax()
         {
@@ -59,7 +59,7 @@ namespace SharpCifs.Dcerpc.Msrpc
 
         public const int AcbDontRequirePreauth = 65536;
 
-        public class SamrCloseHandle : DcerpcMessage
+        internal class SamrCloseHandle : DcerpcMessage
         {
             public override int GetOpnum()
             {
@@ -88,7 +88,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class SamrConnect2 : DcerpcMessage
+        internal class SamrConnect2 : DcerpcMessage
         {
             public override int GetOpnum()
             {
@@ -129,7 +129,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class SamrConnect4 : DcerpcMessage
+        internal class SamrConnect4 : DcerpcMessage
         {
             public override int GetOpnum()
             {
@@ -174,7 +174,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class SamrOpenDomain : DcerpcMessage
+        internal class SamrOpenDomain : DcerpcMessage
         {
             public override int GetOpnum()
             {
@@ -218,7 +218,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class SamrSamEntry : NdrObject
+        internal class SamrSamEntry : NdrObject
         {
             public int Idx;
 
@@ -288,7 +288,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class SamrSamArray : NdrObject
+        internal class SamrSamArray : NdrObject
         {
             public int Count;
 
@@ -348,7 +348,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class SamrEnumerateAliasesInDomain : DcerpcMessage
+        internal class SamrEnumerateAliasesInDomain : DcerpcMessage
         {
             public override int GetOpnum()
             {
@@ -406,7 +406,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class SamrOpenAlias : DcerpcMessage
+        internal class SamrOpenAlias : DcerpcMessage
         {
             public override int GetOpnum()
             {
@@ -450,7 +450,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class SamrGetMembersInAlias : DcerpcMessage
+        internal class SamrGetMembersInAlias : DcerpcMessage
         {
             public override int GetOpnum()
             {
@@ -497,7 +497,7 @@ namespace SharpCifs.Dcerpc.Msrpc
 
         public const int SeGroupLogonId = -1073741824;
 
-        public class SamrRidWithAttribute : NdrObject
+        internal class SamrRidWithAttribute : NdrObject
         {
             public int Rid;
 
@@ -520,7 +520,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class SamrRidWithAttributeArray : NdrObject
+        internal class SamrRidWithAttributeArray : NdrObject
         {
             public int Count;
 

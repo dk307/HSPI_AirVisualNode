@@ -19,7 +19,7 @@ using System.Collections.Generic;
 namespace SharpCifs.Smb
 {
 
-    public class DfsReferral : SmbException
+    internal class DfsReferral : SmbException
     {
         public int PathConsumed;
 

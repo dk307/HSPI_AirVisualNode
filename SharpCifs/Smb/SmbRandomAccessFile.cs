@@ -22,7 +22,7 @@ using SharpCifs.Util.Sharpen;
 
 namespace SharpCifs.Smb
 {
-    public class SmbRandomAccessFile //: DataOutput, DataInput
+    internal class SmbRandomAccessFile //: DataOutput, DataInput
     {
         private const int WriteOptions = unchecked(0x0842);
 

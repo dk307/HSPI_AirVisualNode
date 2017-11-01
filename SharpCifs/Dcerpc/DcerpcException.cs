@@ -22,7 +22,7 @@ using SharpCifs.Util.Sharpen;
 namespace SharpCifs.Dcerpc
 {
 
-    public class DcerpcException : IOException
+    internal class DcerpcException : IOException
     {
         internal static string GetMessageByDcerpcError(int errcode)
         {

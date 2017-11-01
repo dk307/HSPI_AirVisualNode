@@ -18,7 +18,7 @@ using System;
 
 namespace SharpCifs.Dcerpc
 {
-    public class Uuid : Rpc.UuidT
+    internal class Uuid : Rpc.UuidT
     {
         public static int Hex_to_bin(char[] arr, int offset, int length)
         {

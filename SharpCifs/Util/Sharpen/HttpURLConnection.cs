@@ -28,7 +28,7 @@ using System;
 
 namespace SharpCifs.Util.Sharpen
 {
-    public class UrlConnection
+    internal class UrlConnection
     {
         protected Uri Url;
     }

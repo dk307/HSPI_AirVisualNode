@@ -4,14 +4,14 @@ using System.Collections.Generic;
 
 namespace SharpCifs.Util.Sharpen
 {
-    public interface ITerator
+    internal interface ITerator
     {
         bool HasNext();
         object Next();
         void Remove();
     }
 
-    public abstract class Iterator<T> : IEnumerator<T>, ITerator
+    internal abstract class Iterator<T> : IEnumerator<T>, ITerator
     {
         private T _lastValue;
 

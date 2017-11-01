@@ -47,7 +47,7 @@ namespace SharpCifs.Smb
     /// getAccountName: Domain Admins
     /// </pre>
     /// </remarks>
-    public class Sid : Rpc.SidT
+    internal class Sid : Rpc.SidT
     {
         public const int SidTypeUseNone = Lsarpc.SidNameUseNone;
 

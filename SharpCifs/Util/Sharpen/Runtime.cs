@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace SharpCifs.Util.Sharpen
 {
-    public class Runtime
+    internal class Runtime
     {
         private static Runtime _instance;
         private List<ShutdownHook> _shutdownHooks = new List<ShutdownHook>();

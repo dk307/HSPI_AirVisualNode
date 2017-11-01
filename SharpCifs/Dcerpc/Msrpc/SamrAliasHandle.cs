@@ -18,7 +18,7 @@ using SharpCifs.Smb;
 
 namespace SharpCifs.Dcerpc.Msrpc
 {
-    public class SamrAliasHandle : Rpc.PolicyHandle
+    internal class SamrAliasHandle : Rpc.PolicyHandle
     {
         /// <exception cref="System.IO.IOException"></exception>
         public SamrAliasHandle(DcerpcHandle handle,

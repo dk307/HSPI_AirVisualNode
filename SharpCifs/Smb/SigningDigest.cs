@@ -21,7 +21,7 @@ using SharpCifs.Util.Sharpen;
 namespace SharpCifs.Smb
 {
     /// <summary>To filter 0 len updates and for debugging</summary>
-    public class SigningDigest
+    internal class SigningDigest
     {
         internal static LogStream Log = LogStream.GetInstance();
 

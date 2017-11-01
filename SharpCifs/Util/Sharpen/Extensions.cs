@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace SharpCifs.Util.Sharpen
 {
-    public static class Extensions
+    internal static class Extensions
     {
         private static readonly long EpochTicks;
 

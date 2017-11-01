@@ -1,6 +1,6 @@
 namespace SharpCifs.Util.Sharpen
 {
-    public interface IRunnable
+    internal interface IRunnable
     {
         void Run();
     }

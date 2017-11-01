@@ -19,7 +19,7 @@ using SharpCifs.Util.Sharpen;
 
 namespace SharpCifs.Netbios
 {
-    public class SessionRequestPacket : SessionServicePacket
+    internal class SessionRequestPacket : SessionServicePacket
     {
         private Name _calledName;
 

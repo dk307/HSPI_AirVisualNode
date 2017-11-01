@@ -1,16 +1,16 @@
 // This code is derived from jcifs smb client library <jcifs at samba dot org>
 // Ported by J. Arturo <webmaster at komodosoft dot net>
-//  
+//
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -38,14 +38,13 @@ namespace SharpCifs
     /// overwriting properties from the file. Thus properties provided on the
     /// commandline with the <code>-Dproperty.name=value</code> VM parameter
     /// will override properties from the configuration file.
-    /// 
+    ///
     /// There are several ways to set jCIFS properties. See
     /// the <a href="../overview-summary.html#scp">overview page of the API
     /// documentation</a> for details.
     /// </summary>
-    public class Config
-    {        
-
+    internal class Config
+    {
         /// <summary>The static <code>Properties</code>.</summary>
         /// <remarks>The static <code>Properties</code>.</remarks>
         private static Properties _prp = new Properties();

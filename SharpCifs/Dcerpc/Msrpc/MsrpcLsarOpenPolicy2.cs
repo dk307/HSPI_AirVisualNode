@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 namespace SharpCifs.Dcerpc.Msrpc
 {
-    public class MsrpcLsarOpenPolicy2 : Lsarpc.LsarOpenPolicy2
+    internal class MsrpcLsarOpenPolicy2 : Lsarpc.LsarOpenPolicy2
     {
         public MsrpcLsarOpenPolicy2(string server, int access, LsaPolicyHandle policyHandle)
             : base(server,

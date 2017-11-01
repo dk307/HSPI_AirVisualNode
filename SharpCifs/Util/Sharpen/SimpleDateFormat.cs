@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace SharpCifs.Util.Sharpen
 {
-    public class SimpleDateFormat : DateFormat
+    internal class SimpleDateFormat : DateFormat
     {
         string _format;
 

@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 namespace SharpCifs.Dcerpc.Ndr
 {
-    public abstract class NdrObject
+    internal abstract class NdrObject
     {
         /// <exception cref="SharpCifs.Dcerpc.Ndr.NdrException"></exception>
         public abstract void Encode(NdrBuffer dst);

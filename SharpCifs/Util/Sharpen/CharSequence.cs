@@ -2,7 +2,7 @@ using System.Text;
 
 namespace SharpCifs.Util.Sharpen
 {
-    public class CharSequence
+    internal class CharSequence
     {
         public static implicit operator CharSequence(string str)
         {

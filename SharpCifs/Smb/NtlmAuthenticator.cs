@@ -22,7 +22,7 @@ namespace SharpCifs.Smb
     /// <remarks>
     /// This class can be extended by applications that wish to trap authentication related exceptions and automatically retry the exceptional operation with different credentials. Read <a href="../../../authhandler.html">jCIFS Exceptions and NtlmAuthenticator</a> for complete details.
     /// </remarks>
-    public abstract class NtlmAuthenticator
+    internal abstract class NtlmAuthenticator
     {
         private static NtlmAuthenticator _auth;
 

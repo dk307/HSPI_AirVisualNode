@@ -20,7 +20,7 @@ using SharpCifs.Util.Sharpen;
 
 namespace SharpCifs.Util
 {
-    public class Encdec
+    internal class Encdec
     {
         public const long MillisecondsBetween1970And1601 = 11644473600000L;
 

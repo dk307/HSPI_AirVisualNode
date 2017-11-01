@@ -22,7 +22,7 @@ using SharpCifs.Util.Sharpen;
 
 namespace SharpCifs.Dcerpc
 {
-    public class DcerpcPipeHandle : DcerpcHandle
+    internal class DcerpcPipeHandle : DcerpcHandle
     {
         internal SmbNamedPipe Pipe;
 

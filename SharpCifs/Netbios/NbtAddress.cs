@@ -71,7 +71,7 @@ namespace SharpCifs.Netbios
     /// <author>Michael B. Allen</author>
     /// <seealso cref="System.Net.IPAddress">System.Net.IPAddress</seealso>
     /// <since>jcifs-0.1</since>
-    public sealed class NbtAddress
+    internal sealed class NbtAddress
     {
         internal static readonly string AnyHostsName 
             = "*\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000";

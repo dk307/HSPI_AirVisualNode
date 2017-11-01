@@ -23,7 +23,7 @@ namespace SharpCifs.Smb
     /// </summary>
     /// <remarks>This <code>OutputStream</code> can write bytes to a file on an SMB file server.
     /// </remarks>
-    public class SmbFileOutputStream : OutputStream
+    internal class SmbFileOutputStream : OutputStream
     {
         private SmbFile _file;
 

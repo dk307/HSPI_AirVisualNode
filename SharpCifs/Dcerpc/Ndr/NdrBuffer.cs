@@ -20,7 +20,7 @@ using SharpCifs.Util.Sharpen;
 
 namespace SharpCifs.Dcerpc.Ndr
 {
-    public class NdrBuffer
+    internal class NdrBuffer
     {
         internal int Referent;
 

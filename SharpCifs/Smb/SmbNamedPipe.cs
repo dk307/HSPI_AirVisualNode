@@ -74,7 +74,7 @@ namespace SharpCifs.Smb
     /// Named Pipes</a> for a detailed description of how to use jCIFS with
     /// Win32 Named Pipe server processes.
     /// </remarks>
-    public class SmbNamedPipe : SmbFile
+    internal class SmbNamedPipe : SmbFile
     {
         /// <summary>The pipe should be opened read-only.</summary>
         /// <remarks>The pipe should be opened read-only.</remarks>

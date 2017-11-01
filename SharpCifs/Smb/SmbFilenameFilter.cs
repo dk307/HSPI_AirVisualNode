@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 namespace SharpCifs.Smb
 {
-    public interface ISmbFilenameFilter
+    internal interface ISmbFilenameFilter
     {
         /// <exception cref="SharpCifs.Smb.SmbException"></exception>
         bool Accept(SmbFile dir, string name);

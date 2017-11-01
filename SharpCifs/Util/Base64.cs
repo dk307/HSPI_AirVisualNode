@@ -19,7 +19,7 @@ using System.Text;
 
 namespace SharpCifs.Util
 {
-    public class Base64
+    internal class Base64
     {
         private static readonly string Alphabet 
             = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";

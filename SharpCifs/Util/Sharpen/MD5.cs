@@ -22,7 +22,7 @@ namespace SharpCifs.Util.Sharpen
         public uint D;
     }
 
-    public sealed class Md5Core
+    internal sealed class Md5Core
     {
         //Prevent CSC from adding a default public constructor
         private Md5Core() { }

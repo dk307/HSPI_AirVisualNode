@@ -2,7 +2,7 @@ using System.IO;
 
 namespace SharpCifs.Util.Sharpen
 {
-    public class FileInputStream : InputStream
+    internal class FileInputStream : InputStream
     {
         public FileInputStream(FilePath file) : this(file.GetPath())
         {

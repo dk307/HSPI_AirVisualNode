@@ -18,7 +18,7 @@ using SharpCifs.Smb;
 
 namespace SharpCifs.Dcerpc.Msrpc
 {
-    public class MsrpcShareEnum : Srvsvc.ShareEnumAll
+    internal class MsrpcShareEnum : Srvsvc.ShareEnumAll
     {
         internal class MsrpcShareInfo1 : SmbShareInfo
         {

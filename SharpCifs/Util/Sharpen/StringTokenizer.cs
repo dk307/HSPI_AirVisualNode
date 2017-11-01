@@ -1,6 +1,6 @@
 ﻿namespace SharpCifs.Util.Sharpen
 {
-    public class StringTokenizer
+    internal class StringTokenizer
     {
         private string[] _tokens;
         private int _pos;

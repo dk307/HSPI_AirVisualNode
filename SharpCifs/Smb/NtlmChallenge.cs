@@ -19,7 +19,7 @@ using SharpCifs.Util;
 namespace SharpCifs.Smb
 {
 
-    public sealed class NtlmChallenge
+    internal sealed class NtlmChallenge
     {
         public byte[] Challenge;
 

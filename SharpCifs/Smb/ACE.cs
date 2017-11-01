@@ -64,7 +64,7 @@ namespace SharpCifs.Smb
     /// will succeed because the inherited ACE allows local <tt>Administrators</tt>
     /// both <tt>FILE_READ_DATA</tt> and <tt>FILE_WRITE_DATA</tt> access.
     /// </remarks>
-    public class Ace
+    internal class Ace
     {
         public const int FileReadData = unchecked(0x00000001);
 

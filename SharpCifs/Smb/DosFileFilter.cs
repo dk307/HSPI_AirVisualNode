@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 namespace SharpCifs.Smb
 {
-    public class DosFileFilter : ISmbFileFilter
+    internal class DosFileFilter : ISmbFileFilter
     {
         protected internal string Wildcard;
 

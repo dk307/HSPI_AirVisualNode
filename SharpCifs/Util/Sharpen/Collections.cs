@@ -14,7 +14,7 @@ namespace SharpCifs.Util.Sharpen
 
     }
 
-    public static class Collections
+    internal static class Collections
     {
         public static bool AddAll<T>(ICollection<T> list, IEnumerable toAdd)
         {

@@ -28,7 +28,7 @@ namespace SharpCifs.Util.Sharpen
     /// System.Net.Scokets.Socket
     /// https://docs.microsoft.com/ja-jp/dotnet/api/system.net.sockets.socket?view=netcore-1.1
     /// </remarks>
-    public class SocketEx : Socket
+    internal class SocketEx : Socket
     {
         private int _soTimeOut = -1;
 

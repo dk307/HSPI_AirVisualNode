@@ -18,7 +18,7 @@ using SharpCifs.Smb;
 
 namespace SharpCifs.Dcerpc.Msrpc
 {
-    public class LsaPolicyHandle : Rpc.PolicyHandle
+    internal class LsaPolicyHandle : Rpc.PolicyHandle
     {
         /// <exception cref="System.IO.IOException"></exception>
         public LsaPolicyHandle(DcerpcHandle handle, string server, int access)

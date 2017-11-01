@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace SharpCifs.Util.Sharpen
 {
-    public class FilePath
+    internal class FilePath
     {
         private string _path;
         private static long _tempCounter;

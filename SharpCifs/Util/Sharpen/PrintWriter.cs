@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SharpCifs.Util.Sharpen
 {
-    public class PrintWriter : TextWriter
+    internal class PrintWriter : TextWriter
     {
         private TextWriter _writer;
         private FileStream _stream;

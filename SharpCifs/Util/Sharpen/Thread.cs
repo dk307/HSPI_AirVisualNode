@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace SharpCifs.Util.Sharpen
 {
-    public class Thread : IRunnable
+    internal class Thread : IRunnable
     {
         private static ThreadGroup DefaultGroup = new ThreadGroup();
 
@@ -273,7 +273,7 @@ namespace SharpCifs.Util.Sharpen
         }
     }
 
-    public class ThreadGroup
+    internal class ThreadGroup
     {
         private List<Thread> _threads = new List<Thread>();
 

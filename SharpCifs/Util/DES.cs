@@ -30,7 +30,7 @@ namespace SharpCifs.Util
     /// Norbert Hranitzky
     /// <p>and modified again by Michael B. Allen
     /// </remarks>
-    public class DES
+    internal class DES
     {
         private int[] _encryptKeys = new int[32];
 

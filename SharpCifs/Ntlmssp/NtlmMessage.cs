@@ -20,7 +20,7 @@ namespace SharpCifs.Ntlmssp
 {
     /// <summary>Abstract superclass for all NTLMSSP messages.</summary>
     /// <remarks>Abstract superclass for all NTLMSSP messages.</remarks>
-    public abstract class NtlmMessage : NtlmFlags
+    internal abstract class NtlmMessage : NtlmFlags
     {
         /// <summary>The NTLMSSP "preamble".</summary>
         /// <remarks>The NTLMSSP "preamble".</remarks>

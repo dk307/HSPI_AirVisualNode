@@ -1,6 +1,6 @@
 namespace SharpCifs.Util.Sharpen
 {
-    public interface IFilenameFilter
+    internal interface IFilenameFilter
     {
         bool Accept(FilePath dir, string name);
     }

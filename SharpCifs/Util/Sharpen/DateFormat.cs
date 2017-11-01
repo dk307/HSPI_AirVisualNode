@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace SharpCifs.Util.Sharpen
 {
-    public abstract class DateFormat
+    internal abstract class DateFormat
     {
         public const int Default = 2;
 

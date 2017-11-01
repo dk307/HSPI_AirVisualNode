@@ -18,7 +18,7 @@ using SharpCifs.Smb;
 
 namespace SharpCifs.Dcerpc.Msrpc
 {
-    public class SamrDomainHandle : Rpc.PolicyHandle
+    internal class SamrDomainHandle : Rpc.PolicyHandle
     {
         /// <exception cref="System.IO.IOException"></exception>
         public SamrDomainHandle(DcerpcHandle handle,

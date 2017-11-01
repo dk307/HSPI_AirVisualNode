@@ -1,6 +1,6 @@
 namespace SharpCifs.Util.Sharpen
 {
-    public class FilterInputStream : InputStream
+    internal class FilterInputStream : InputStream
     {
         protected InputStream In;
 

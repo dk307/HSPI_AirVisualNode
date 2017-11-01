@@ -18,9 +18,9 @@ using SharpCifs.Dcerpc.Ndr;
 
 namespace SharpCifs.Dcerpc
 {
-    public class Rpc
+    internal class Rpc
     {
-        public class UuidT : NdrObject
+        internal class UuidT : NdrObject
         {
             public int TimeLow;
 
@@ -81,7 +81,7 @@ namespace SharpCifs.Dcerpc
             }
         }
 
-        public class PolicyHandle : NdrObject
+        internal class PolicyHandle : NdrObject
         {
             public int Type;
 
@@ -141,7 +141,7 @@ namespace SharpCifs.Dcerpc
             }
         }
 
-        public class Unicode_string : NdrObject
+        internal class Unicode_string : NdrObject
         {
             public short Length;
 
@@ -206,7 +206,7 @@ namespace SharpCifs.Dcerpc
             }
         }
 
-        public class SidT : NdrObject
+        internal class SidT : NdrObject
         {
             public byte Revision;
 

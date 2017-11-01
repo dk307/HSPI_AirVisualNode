@@ -18,7 +18,7 @@ using SharpCifs.Util;
 
 namespace SharpCifs.Smb
 {
-    public class SmbShareInfo : IFileEntry
+    internal class SmbShareInfo : IFileEntry
     {
         protected internal string NetName;
 

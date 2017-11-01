@@ -26,7 +26,7 @@ namespace SharpCifs.Util
     /// in which the key is truncated at 64 bytes (rather than being hashed
     /// via MD5).
     /// </remarks>
-    public class Hmact64 : MessageDigest
+    internal class Hmact64 : MessageDigest
     {
         private const int BlockLength = 64;
 

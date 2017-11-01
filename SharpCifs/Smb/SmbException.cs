@@ -39,7 +39,7 @@ namespace SharpCifs.Smb
     /// change the mapping.
     /// </remarks>
 
-    public class SmbException : IOException
+    internal class SmbException : IOException
     {
 
         internal static string GetMessageByCode(int errcode)

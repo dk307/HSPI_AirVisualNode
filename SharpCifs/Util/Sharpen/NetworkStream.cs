@@ -3,7 +3,7 @@ using System.IO;
 
 namespace SharpCifs.Util.Sharpen
 {
-    public class NetworkStream : Stream
+    internal class NetworkStream : Stream
     {
         SocketEx _socket;
 

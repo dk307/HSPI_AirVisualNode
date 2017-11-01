@@ -24,7 +24,7 @@ namespace SharpCifs.Ntlmssp
 {
     /// <summary>Represents an NTLMSSP Type-1 message.</summary>
     /// <remarks>Represents an NTLMSSP Type-1 message.</remarks>
-    public class Type1Message : NtlmMessage
+    internal class Type1Message : NtlmMessage
     {
         private static readonly int DefaultFlags;
 

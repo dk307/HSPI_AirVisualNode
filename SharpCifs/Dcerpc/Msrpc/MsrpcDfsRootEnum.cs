@@ -19,7 +19,7 @@ using SharpCifs.Smb;
 
 namespace SharpCifs.Dcerpc.Msrpc
 {
-    public class MsrpcDfsRootEnum : Netdfs.NetrDfsEnumEx
+    internal class MsrpcDfsRootEnum : Netdfs.NetrDfsEnumEx
     {
         public MsrpcDfsRootEnum(string server) : base(server, 200, unchecked(0xFFFF), new Netdfs.DfsEnumStruct(), new NdrLong(0))
         {

@@ -3,7 +3,7 @@ using System.IO;
 
 namespace SharpCifs.Util.Sharpen
 {
-    public class RandomAccessFile
+    internal class RandomAccessFile
     {
         private FileStream _stream;
 

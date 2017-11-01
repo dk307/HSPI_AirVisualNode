@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Hspi.Exceptions
 {
     [Serializable]
-    public class HspiException : Exception
+    internal class HspiException : Exception
     {
         public HspiException()
         {

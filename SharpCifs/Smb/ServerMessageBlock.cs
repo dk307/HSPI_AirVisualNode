@@ -21,7 +21,7 @@ using SharpCifs.Util.Transport;
 
 namespace SharpCifs.Smb
 {
-    public abstract class ServerMessageBlock : Response
+    internal abstract class ServerMessageBlock : Response
     {
         internal static LogStream Log = LogStream.GetInstance();
 

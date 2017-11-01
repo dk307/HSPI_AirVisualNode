@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 namespace SharpCifs.Dcerpc
 {
-    public class UnicodeString : Rpc.Unicode_string
+    internal class UnicodeString : Rpc.Unicode_string
     {
         internal bool Zterm;
 

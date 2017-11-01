@@ -20,7 +20,7 @@ using SharpCifs.Util.Sharpen;
 
 namespace SharpCifs.Smb
 {
-    public static class SmbFileExtensions
+    internal static class SmbFileExtensions
     {
         /// <summary>
         /// Get file's creation date converted to local timezone

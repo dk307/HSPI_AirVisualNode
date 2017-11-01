@@ -3,7 +3,7 @@
     /// <summary>
     /// Class for the main program.
     /// </summary>
-    public static class Program
+    internal static class Program
     {
         /// <summary>
         /// The homeseer server address.  Defaults to the local computer but can be changed through the command line argument, server=address.

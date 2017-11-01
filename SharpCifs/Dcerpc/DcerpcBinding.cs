@@ -20,7 +20,7 @@ using SharpCifs.Util.Sharpen;
 
 namespace SharpCifs.Dcerpc
 {
-    public class DcerpcBinding
+    internal class DcerpcBinding
     {
         private static Hashtable _interfaces;
 

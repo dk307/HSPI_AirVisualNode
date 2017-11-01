@@ -27,7 +27,7 @@ namespace SharpCifs.Smb
     /// See <a href="../../../authhandler.html">jCIFS Exceptions and NtlmAuthenticator</a> for more information about <code>SmbAuthException</code>.
     /// </remarks>
 
-    public class SmbAuthException : SmbException
+    internal class SmbAuthException : SmbException
     {
         internal SmbAuthException(int errcode) : base(errcode, null)
         {

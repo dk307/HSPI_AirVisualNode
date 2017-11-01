@@ -25,7 +25,7 @@ namespace SharpCifs.Ntlmssp
 {
     /// <summary>Represents an NTLMSSP Type-3 message.</summary>
     /// <remarks>Represents an NTLMSSP Type-3 message.</remarks>
-    public class Type3Message : NtlmMessage
+    internal class Type3Message : NtlmMessage
     {
         internal const long MillisecondsBetween1970And1601 = 11644473600000L;
 

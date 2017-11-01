@@ -19,7 +19,7 @@ using System.IO;
 namespace SharpCifs.Netbios
 {
 
-    public class NbtException : IOException
+    internal class NbtException : IOException
     {
         public const int Success = 0;
 

@@ -18,7 +18,7 @@ using SharpCifs.Dcerpc.Ndr;
 
 namespace SharpCifs.Dcerpc.Msrpc
 {
-    public class Netdfs
+    internal class Netdfs
     {
         public static string GetSyntax()
         {
@@ -35,7 +35,7 @@ namespace SharpCifs.Dcerpc.Msrpc
 
         public const int DfsStorageStateActive = unchecked(0x0004);
 
-        public class DfsInfo1 : NdrObject
+        internal class DfsInfo1 : NdrObject
         {
             public string EntryPath;
 
@@ -64,7 +64,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class DfsEnumArray1 : NdrObject
+        internal class DfsEnumArray1 : NdrObject
         {
             public int Count;
 
@@ -124,7 +124,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class DfsStorageInfo : NdrObject
+        internal class DfsStorageInfo : NdrObject
         {
             public int State;
 
@@ -171,7 +171,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class DfsInfo3 : NdrObject
+        internal class DfsInfo3 : NdrObject
         {
             public string Path;
 
@@ -263,7 +263,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class DfsEnumArray3 : NdrObject
+        internal class DfsEnumArray3 : NdrObject
         {
             public int Count;
 
@@ -323,7 +323,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class DfsInfo200 : NdrObject
+        internal class DfsInfo200 : NdrObject
         {
             public string DfsName;
 
@@ -352,7 +352,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class DfsEnumArray200 : NdrObject
+        internal class DfsEnumArray200 : NdrObject
         {
             public int Count;
 
@@ -412,7 +412,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class DfsInfo300 : NdrObject
+        internal class DfsInfo300 : NdrObject
         {
             public int Flags;
 
@@ -445,7 +445,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class DfsEnumArray300 : NdrObject
+        internal class DfsEnumArray300 : NdrObject
         {
             public int Count;
 
@@ -505,7 +505,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class DfsEnumStruct : NdrObject
+        internal class DfsEnumStruct : NdrObject
         {
             public int Level;
 
@@ -545,7 +545,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class NetrDfsEnumEx : DcerpcMessage
+        internal class NetrDfsEnumEx : DcerpcMessage
         {
             public override int GetOpnum()
             {

@@ -28,7 +28,7 @@ using System.IO;
 
 namespace SharpCifs.Util.Sharpen
 {
-    public class BufferedWriter
+    internal class BufferedWriter
     {
         StreamWriter _writer;
 

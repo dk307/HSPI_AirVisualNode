@@ -1,6 +1,6 @@
 namespace SharpCifs.Util.Sharpen
 {
-    public class FileReader : InputStreamReader
+    internal class FileReader : InputStreamReader
     {
         //public FileReader (FilePath f) : base(f.GetPath ())
         //{

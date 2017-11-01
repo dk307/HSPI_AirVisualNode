@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace SharpCifs.Util.Sharpen
 {
-    public abstract class AbstractMap<T, TU> : IDictionary<T, TU>
+    internal abstract class AbstractMap<T, TU> : IDictionary<T, TU>
     {
         public virtual void Clear()
         {

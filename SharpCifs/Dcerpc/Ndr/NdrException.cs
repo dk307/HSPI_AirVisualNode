@@ -19,7 +19,7 @@ using System.IO;
 namespace SharpCifs.Dcerpc.Ndr
 {
 
-    public class NdrException : IOException
+    internal class NdrException : IOException
     {
         public static readonly string NoNullRef = "ref pointer cannot be null";
 

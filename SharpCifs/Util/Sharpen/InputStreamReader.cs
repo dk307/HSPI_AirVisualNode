@@ -3,7 +3,7 @@ using System.Text;
 
 namespace SharpCifs.Util.Sharpen
 {
-    public class InputStreamReader : StreamReader
+    internal class InputStreamReader : StreamReader
     {
         //Stream(string path) constructor deleted
         //protected InputStreamReader (string file) : base(file)

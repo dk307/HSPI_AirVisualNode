@@ -24,7 +24,7 @@ namespace SharpCifs.Smb
     /// <summary>This InputStream can read bytes from a file on an SMB file server.</summary>
     /// <remarks>This InputStream can read bytes from a file on an SMB file server. Offsets are 64 bits.
     /// </remarks>
-    public class SmbFileInputStream : InputStream
+    internal class SmbFileInputStream : InputStream
     {
         private long _fp;
 

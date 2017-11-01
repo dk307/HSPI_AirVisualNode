@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace SharpCifs.Util.Sharpen
 {
-    public class Arrays
+    internal class Arrays
     {
         public static List<T> AsList<T>(params T[] array)
         {

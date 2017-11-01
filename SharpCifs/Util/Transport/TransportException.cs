@@ -21,7 +21,7 @@ using SharpCifs.Util.Sharpen;
 namespace SharpCifs.Util.Transport
 {
 
-    public class TransportException : IOException
+    internal class TransportException : IOException
     {
         private Exception _rootCause;
 

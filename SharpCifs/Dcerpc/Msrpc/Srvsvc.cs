@@ -18,14 +18,14 @@ using SharpCifs.Dcerpc.Ndr;
 
 namespace SharpCifs.Dcerpc.Msrpc
 {
-    public class Srvsvc
+    internal class Srvsvc
     {
         public static string GetSyntax()
         {
             return "4b324fc8-1670-01d3-1278-5a47bf6ee188:3.0";
         }
 
-        public class ShareInfo0 : NdrObject
+        internal class ShareInfo0 : NdrObject
         {
             public string Netname;
 
@@ -54,7 +54,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class ShareInfoCtr0 : NdrObject
+        internal class ShareInfoCtr0 : NdrObject
         {
             public int Count;
 
@@ -114,7 +114,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class ShareInfo1 : NdrObject
+        internal class ShareInfo1 : NdrObject
         {
             public string Netname;
 
@@ -161,7 +161,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class ShareInfoCtr1 : NdrObject
+        internal class ShareInfoCtr1 : NdrObject
         {
             public int Count;
 
@@ -221,7 +221,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class ShareInfo502 : NdrObject
+        internal class ShareInfo502 : NdrObject
         {
             public string Netname;
 
@@ -349,7 +349,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class ShareInfoCtr502 : NdrObject
+        internal class ShareInfoCtr502 : NdrObject
         {
             public int Count;
 
@@ -409,7 +409,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class ShareEnumAll : DcerpcMessage
+        internal class ShareEnumAll : DcerpcMessage
         {
             public override int GetOpnum()
             {
@@ -487,7 +487,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class ShareGetInfo : DcerpcMessage
+        internal class ShareGetInfo : DcerpcMessage
         {
             public override int GetOpnum()
             {
@@ -542,7 +542,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class ServerInfo100 : NdrObject
+        internal class ServerInfo100 : NdrObject
         {
             public int PlatformId;
 
@@ -575,7 +575,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class ServerGetInfo : DcerpcMessage
+        internal class ServerGetInfo : DcerpcMessage
         {
             public override int GetOpnum()
             {
@@ -626,7 +626,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class TimeOfDayInfo : NdrObject
+        internal class TimeOfDayInfo : NdrObject
         {
             public int Elapsedt;
 
@@ -689,7 +689,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class RemoteTod : DcerpcMessage
+        internal class RemoteTod : DcerpcMessage
         {
             public override int GetOpnum()
             {

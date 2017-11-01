@@ -18,14 +18,14 @@ using SharpCifs.Dcerpc.Ndr;
 
 namespace SharpCifs.Dcerpc.Msrpc
 {
-    public class Lsarpc
+    internal class Lsarpc
     {
         public static string GetSyntax()
         {
             return "12345778-1234-abcd-ef00-0123456789ab:0.0";
         }
 
-        public class LsarQosInfo : NdrObject
+        internal class LsarQosInfo : NdrObject
         {
             public int Length;
 
@@ -56,7 +56,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class LsarObjectAttributes : NdrObject
+        internal class LsarObjectAttributes : NdrObject
         {
             public int Length;
 
@@ -133,7 +133,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class LsarDomainInfo : NdrObject
+        internal class LsarDomainInfo : NdrObject
         {
             public Rpc.Unicode_string Name;
 
@@ -217,7 +217,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class LsarDnsDomainInfo : NdrObject
+        internal class LsarDnsDomainInfo : NdrObject
         {
             public Rpc.Unicode_string Name;
 
@@ -456,7 +456,7 @@ namespace SharpCifs.Dcerpc.Msrpc
 
         public const int PolicyInfoDnsDomain = 12;
 
-        public class LsarSidPtr : NdrObject
+        internal class LsarSidPtr : NdrObject
         {
             public Rpc.SidT Sid;
 
@@ -489,7 +489,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class LsarSidArray : NdrObject
+        internal class LsarSidArray : NdrObject
         {
             public int NumSids;
 
@@ -567,7 +567,7 @@ namespace SharpCifs.Dcerpc.Msrpc
 
         public const int SidNameUnknown = 8;
 
-        public class LsarTranslatedSid : NdrObject
+        internal class LsarTranslatedSid : NdrObject
         {
             public int SidType;
 
@@ -594,7 +594,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class LsarTransSidArray : NdrObject
+        internal class LsarTransSidArray : NdrObject
         {
             public int Count;
 
@@ -654,7 +654,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class LsarTrustInformation : NdrObject
+        internal class LsarTrustInformation : NdrObject
         {
             public Rpc.Unicode_string Name;
 
@@ -738,7 +738,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class LsarRefDomainList : NdrObject
+        internal class LsarRefDomainList : NdrObject
         {
             public int Count;
 
@@ -802,7 +802,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class LsarTranslatedName : NdrObject
+        internal class LsarTranslatedName : NdrObject
         {
             public short SidType;
 
@@ -876,7 +876,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class LsarTransNameArray : NdrObject
+        internal class LsarTransNameArray : NdrObject
         {
             public int Count;
 
@@ -936,7 +936,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class LsarClose : DcerpcMessage
+        internal class LsarClose : DcerpcMessage
         {
             public override int GetOpnum()
             {
@@ -966,7 +966,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class LsarQueryInformationPolicy : DcerpcMessage
+        internal class LsarQueryInformationPolicy : DcerpcMessage
         {
             public override int GetOpnum()
             {
@@ -1009,7 +1009,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class LsarLookupSids : DcerpcMessage
+        internal class LsarLookupSids : DcerpcMessage
         {
             public override int GetOpnum()
             {
@@ -1069,7 +1069,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class LsarOpenPolicy2 : DcerpcMessage
+        internal class LsarOpenPolicy2 : DcerpcMessage
         {
             public override int GetOpnum()
             {
@@ -1115,7 +1115,7 @@ namespace SharpCifs.Dcerpc.Msrpc
             }
         }
 
-        public class LsarQueryInformationPolicy2 : DcerpcMessage
+        internal class LsarQueryInformationPolicy2 : DcerpcMessage
         {
             public override int GetOpnum()
             {

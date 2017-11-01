@@ -2,7 +2,7 @@
 
 namespace SharpCifs.Util.Sharpen
 {
-    public class Properties
+    internal class Properties
     {
         protected Hashtable _properties;
 

@@ -31,7 +31,7 @@ namespace SharpCifs.Util
     /// 3 - almost everything
     /// N - debugging
     /// </summary>
-    public class LogStream : PrintWriter
+    internal class LogStream : PrintWriter
     {
         private static LogStream _inst = null;
 

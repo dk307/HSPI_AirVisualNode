@@ -1,16 +1,16 @@
 // This code is derived from jcifs smb client library <jcifs at samba dot org>
 // Ported by J. Arturo <webmaster at komodosoft dot net>
-//  
+//
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -51,7 +51,7 @@ namespace SharpCifs
     /// hostnames on LANs and WANs that support a mixture of NetBIOS/WINS and
     /// DNS resolvable hosts.
     /// </remarks>
-    public class UniAddress
+    internal class UniAddress
     {
         private const int ResolverWins = 0;
 
@@ -118,7 +118,7 @@ namespace SharpCifs
                                 if (_log.Level > 1)
                                 {
                                     _log.WriteLine(
-                                        "UniAddress resolveOrder specifies WINS however the " 
+                                        "UniAddress resolveOrder specifies WINS however the "
                                         + "jcifs.netbios.wins property has not been set");
                                 }
                                 continue;
@@ -179,11 +179,11 @@ namespace SharpCifs
 
             internal UnknownHostException Uhe;
 
-            internal QueryThread(Sem sem, 
-                                 string host, 
-                                 int type, 
-                                 string scope, 
-                                 IPAddress svr) 
+            internal QueryThread(Sem sem,
+                                 string host,
+                                 int type,
+                                 string scope,
+                                 IPAddress svr)
                 : base("JCIFS-QueryThread: " + host)
             {
                 this.Sem = sem;
@@ -318,7 +318,7 @@ namespace SharpCifs
         /// <exception cref="UnknownHostException"></exception>
         public static UniAddress GetByName(string hostname, bool possibleNtDomainOrWorkgroup)
         {
-            UniAddress[] addrs = GetAllByName(hostname, 
+            UniAddress[] addrs = GetAllByName(hostname,
                                               possibleNtDomainOrWorkgroup);
             return addrs[0];
         }
@@ -355,7 +355,7 @@ namespace SharpCifs
 
                         case ResolverWins:
                             {
-                                if (hostname == NbtAddress.MasterBrowserName 
+                                if (hostname == NbtAddress.MasterBrowserName
                                     || hostname.Length > 15)
                                 {
                                     // invalid netbios name
@@ -363,14 +363,14 @@ namespace SharpCifs
                                 }
                                 if (possibleNtDomainOrWorkgroup)
                                 {
-                                    addr = LookupServerOrWorkgroup(hostname, 
+                                    addr = LookupServerOrWorkgroup(hostname,
                                                                    NbtAddress.GetWinsAddress());
                                 }
                                 else
                                 {
-                                    addr = NbtAddress.GetByName(hostname, 
-                                                                unchecked(0x20), 
-                                                                null, 
+                                    addr = NbtAddress.GetByName(hostname,
+                                                                unchecked(0x20),
+                                                                null,
                                                                 NbtAddress.GetWinsAddress());
                                 }
                                 break;
@@ -388,7 +388,7 @@ namespace SharpCifs
                                 {
                                     if (possibleNtDomainOrWorkgroup)
                                     {
-                                        NbtAddress[] iaddrs = LookupServerOrWorkgroup(hostname, 
+                                        NbtAddress[] iaddrs = LookupServerOrWorkgroup(hostname,
                                                                                       _baddr);
 
                                         UniAddress[] addrs = new UniAddress[iaddrs.Length];
@@ -397,16 +397,14 @@ namespace SharpCifs
                                             addrs[ii] = new UniAddress(iaddrs[ii]);
                                         }
                                         return addrs;
-
                                     }
                                     else
                                     {
-                                        addr = NbtAddress.GetByName(hostname, 
-                                                                    unchecked(0x20), 
-                                                                    null, 
+                                        addr = NbtAddress.GetByName(hostname,
+                                                                    unchecked(0x20),
+                                                                    null,
                                                                     _baddr);
                                     }
-
                                 }
                                 catch (Exception ex)
                                 {

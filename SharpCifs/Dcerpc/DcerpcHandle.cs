@@ -22,7 +22,7 @@ using SharpCifs.Util.Sharpen;
 
 namespace SharpCifs.Dcerpc
 {
-    public abstract class DcerpcHandle
+    internal abstract class DcerpcHandle
     {
         /// <exception cref="SharpCifs.Dcerpc.DcerpcException"></exception>
         protected internal static DcerpcBinding ParseBinding(string str)

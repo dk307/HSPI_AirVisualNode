@@ -1,6 +1,6 @@
 namespace SharpCifs.Util.Sharpen
 {
-    public interface IExecutor
+    internal interface IExecutor
     {
         void Execute(IRunnable runnable);
     }

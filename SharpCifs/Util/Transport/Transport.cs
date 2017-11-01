@@ -34,7 +34,7 @@ namespace SharpCifs.Util.Transport
     /// properly. Apparatus is provided to send and receive requests
     /// concurrently.
     /// </remarks>
-    public abstract class Transport : IRunnable
+    internal abstract class Transport : IRunnable
     {
         internal static int Id;
 

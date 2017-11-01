@@ -19,7 +19,7 @@ using SharpCifs.Util;
 
 namespace SharpCifs.Dcerpc
 {
-    public class DcerpcBind : DcerpcMessage
+    internal class DcerpcBind : DcerpcMessage
     {
         internal static readonly string[] ResultMessage =
         {

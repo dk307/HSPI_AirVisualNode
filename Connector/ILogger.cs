@@ -1,6 +1,6 @@
 ﻿namespace Hspi.Connector
 {
-    public interface ILogger
+    internal interface ILogger
     {
         void LogDebug(string message);
 

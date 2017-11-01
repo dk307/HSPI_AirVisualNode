@@ -1,16 +1,16 @@
 // This code is derived from jcifs smb client library <jcifs at samba dot org>
 // Ported by J. Arturo <webmaster at komodosoft dot net>
-//  
+//
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -21,7 +21,7 @@ using SharpCifs.Util.Sharpen;
 
 namespace SharpCifs.Netbios
 {
-    public class Name
+    internal class Name
     {
         private const int TypeOffset = 31;
 
@@ -128,7 +128,6 @@ namespace SharpCifs.Netbios
 
         internal int ReadWireFormatDos(byte[] src, int srcIndex)
         {
-
             int length = 15;
             byte[] tmp = new byte[length];
 
@@ -147,7 +146,6 @@ namespace SharpCifs.Netbios
             return length + 1;
         }
 
-
         internal virtual int WriteScopeWireFormat(byte[] dst, int dstIndex)
         {
             if (Scope == null)
@@ -159,7 +157,7 @@ namespace SharpCifs.Netbios
             dst[dstIndex++] = unchecked((byte)('.'));
             try
             {
-                Array.Copy(Runtime.GetBytesForString(Scope, OemEncoding), 
+                Array.Copy(Runtime.GetBytesForString(Scope, OemEncoding),
                            0, dst, dstIndex, Scope.Length);
             }
             catch (UnsupportedEncodingException)

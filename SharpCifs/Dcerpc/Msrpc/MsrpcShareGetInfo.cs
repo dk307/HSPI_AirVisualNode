@@ -18,7 +18,7 @@ using SharpCifs.Smb;
 
 namespace SharpCifs.Dcerpc.Msrpc
 {
-    public class MsrpcShareGetInfo : Srvsvc.ShareGetInfo
+    internal class MsrpcShareGetInfo : Srvsvc.ShareGetInfo
     {
         public MsrpcShareGetInfo(string server, string sharename)
             : base(server, sharename, 502, new Srvsvc.ShareInfo502())

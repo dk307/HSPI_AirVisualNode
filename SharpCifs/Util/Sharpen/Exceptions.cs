@@ -28,15 +28,15 @@ using System;
 
 namespace SharpCifs.Util.Sharpen
 {
-    public class VirtualMachineError : Error
+    internal class VirtualMachineError : Error
     {
     }
 
-    public class StackOverflowError : VirtualMachineError
+    internal class StackOverflowError : VirtualMachineError
     {
     }
 
-    public class BrokenBarrierException : Exception
+    internal class BrokenBarrierException : Exception
     {
     }
 
@@ -44,15 +44,15 @@ namespace SharpCifs.Util.Sharpen
     {
     }
 
-    public class CharacterCodingException : Exception
+    internal class CharacterCodingException : Exception
     {
     }
 
-    public class DataFormatException : Exception
+    internal class DataFormatException : Exception
     {
     }
 
-    public class EofException : Exception
+    internal class EofException : Exception
     {
         public EofException()
         {
@@ -63,7 +63,7 @@ namespace SharpCifs.Util.Sharpen
         }
     }
 
-    public class Error : Exception
+    internal class Error : Exception
     {
         public Error()
         {
@@ -82,33 +82,33 @@ namespace SharpCifs.Util.Sharpen
         }
     }
 
-    public class ExecutionException : Exception
+    internal class ExecutionException : Exception
     {
         public ExecutionException(Exception inner) : base("Execution failed", inner)
         {
         }
     }
 
-    public class InstantiationException : Exception
+    internal class InstantiationException : Exception
     {
     }
 
-    public class InterruptedIoException : Exception
+    internal class InterruptedIoException : Exception
     {
         public InterruptedIoException(string msg) : base(msg)
         {
         }
     }
 
-    public class MissingResourceException : Exception
+    internal class MissingResourceException : Exception
     {
     }
 
-    public class NoSuchAlgorithmException : Exception
+    internal class NoSuchAlgorithmException : Exception
     {
     }
 
-    public class NoSuchElementException : Exception
+    internal class NoSuchElementException : Exception
     {
     }
 
@@ -120,7 +120,7 @@ namespace SharpCifs.Util.Sharpen
     {
     }
 
-    public class ParseException : Exception
+    internal class ParseException : Exception
     {
         public ParseException()
         {
@@ -132,7 +132,7 @@ namespace SharpCifs.Util.Sharpen
         }
     }
 
-    public class RuntimeException : Exception
+    internal class RuntimeException : Exception
     {
         public RuntimeException()
         {
@@ -155,7 +155,7 @@ namespace SharpCifs.Util.Sharpen
     {
     }
 
-    public class UnknownHostException : Exception
+    internal class UnknownHostException : Exception
     {
         public UnknownHostException()
         {
@@ -171,7 +171,7 @@ namespace SharpCifs.Util.Sharpen
         }
     }
 
-    public class UnsupportedEncodingException : Exception
+    internal class UnsupportedEncodingException : Exception
     {
     }
 
@@ -186,11 +186,11 @@ namespace SharpCifs.Util.Sharpen
     {
     }
 
-    public class GitException : Exception
+    internal class GitException : Exception
     {
     }
 
-    public class ConnectException : Exception
+    internal class ConnectException : Exception
     {
         public ConnectException(string msg) : base(msg)
         {

@@ -21,7 +21,7 @@ using SharpCifs.Util.Sharpen;
 
 namespace SharpCifs.Netbios
 {
-    public class Lmhosts
+    internal class Lmhosts
     {
         private static readonly string Filename = Config.GetProperty("jcifs.netbios.lmhosts");
 

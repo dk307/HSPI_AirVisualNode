@@ -31,7 +31,7 @@ namespace SharpCifs.Smb
     /// NtlmAuthenticator</a> for related information.
     /// </remarks>
 
-    public sealed class NtlmPasswordAuthentication : Principal
+    internal sealed class NtlmPasswordAuthentication : Principal
     {
         private static readonly int LmCompatibility
             = Config.GetInt("jcifs.smb.lmCompatibility", 3);

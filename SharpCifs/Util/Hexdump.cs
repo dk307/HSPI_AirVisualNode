@@ -19,7 +19,7 @@ using System.IO;
 
 namespace SharpCifs.Util
 {
-    public class Hexdump
+    internal class Hexdump
     {
         private static readonly string Nl = @"\r\n"; //Runtime.GetProperty("line.separator");
 

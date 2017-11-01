@@ -27,7 +27,7 @@ using SharpCifs.Util.Transport;
 
 namespace SharpCifs.Smb
 {
-    public class SmbTransport : Transport
+    internal class SmbTransport : Transport
     {
         internal static readonly byte[] Buf = new byte[0xFFFF];
 

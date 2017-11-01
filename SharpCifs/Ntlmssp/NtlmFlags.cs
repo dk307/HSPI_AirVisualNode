@@ -18,7 +18,7 @@ namespace SharpCifs.Ntlmssp
 {
     /// <summary>Flags used during negotiation of NTLMSSP authentication.</summary>
     /// <remarks>Flags used during negotiation of NTLMSSP authentication.</remarks>
-    public abstract class NtlmFlags
+    internal abstract class NtlmFlags
     {
         /// <summary>Indicates whether Unicode strings are supported or used.</summary>
         /// <remarks>Indicates whether Unicode strings are supported or used.</remarks>

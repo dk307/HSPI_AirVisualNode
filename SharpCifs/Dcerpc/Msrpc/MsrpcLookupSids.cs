@@ -18,7 +18,7 @@ using SharpCifs.Smb;
 
 namespace SharpCifs.Dcerpc.Msrpc
 {
-    public class MsrpcLookupSids : Lsarpc.LsarLookupSids
+    internal class MsrpcLookupSids : Lsarpc.LsarLookupSids
     {
         internal Sid[] sids;
 

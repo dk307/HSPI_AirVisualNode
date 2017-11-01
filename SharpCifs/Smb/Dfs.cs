@@ -20,7 +20,7 @@ using SharpCifs.Util.Sharpen;
 
 namespace SharpCifs.Smb
 {
-    public class Dfs
+    internal class Dfs
     {
         internal class CacheEntry
         {

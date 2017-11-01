@@ -19,7 +19,7 @@ using SharpCifs.Util.Sharpen;
 
 namespace SharpCifs.Netbios
 {
-    public abstract class SessionServicePacket
+    internal abstract class SessionServicePacket
     {
         internal const int SessionMessage = unchecked(0x00);
 

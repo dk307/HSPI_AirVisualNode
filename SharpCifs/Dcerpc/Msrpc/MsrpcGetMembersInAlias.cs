@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 namespace SharpCifs.Dcerpc.Msrpc
 {
-    public class MsrpcGetMembersInAlias : Samr.SamrGetMembersInAlias
+    internal class MsrpcGetMembersInAlias : Samr.SamrGetMembersInAlias
     {
         public MsrpcGetMembersInAlias(SamrAliasHandle aliasHandle, Lsarpc.LsarSidArray sids
             ) : base(aliasHandle, sids)
