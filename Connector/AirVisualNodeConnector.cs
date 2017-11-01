@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using SharpCifs.Smb;
 
 namespace Hspi.Connector
 {
@@ -65,67 +66,69 @@ namespace Hspi.Connector
             {
                 logger.LogDebug(Invariant($"Connecting to {DeviceIP}"));
 
-                string share = Invariant($"\\\\{DeviceIP}\\airvisual");
-                using (NetworkConnection networkConnection = new NetworkConnection(share, credentials))
+                DateTime localTime = DateTime.Now.ToLocalTime();
+                string path = Invariant($"smb://{DeviceIP}/airvisual/{localTime.Year}{localTime.Month}_AirVisual_values.txt");
+
+                var auth = new NtlmPasswordAuthentication(null, credentials.UserName, credentials.Password);
+                var smbFile = new SmbFile(path, auth, SmbFile.FileShareRead | SmbFile.FileShareWrite);
+
+                smbFile.Connect();
+
+                string lastString = null;
+
+                using (Stream fileStream = await smbFile.GetInputStreamAsync())
                 {
-                    string lastString = null;
-                    DateTime localTime = DateTime.Now.ToLocalTime();
-                    string path = Invariant($"{share}\\{localTime.Year}{localTime.Month}_AirVisual_values.txt");
+                    logger.LogDebug(Invariant($"Reading from {path} with size {fileStream.Length} Bytes"));
 
-                    using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    int bufferSize = 256;
+
+                    fileStream.Seek(0, SeekOrigin.End);
+                    fileStream.Seek(-Math.Min(bufferSize, fileStream.Length), SeekOrigin.Current);
+
+                    using (var reader = new StreamReader(fileStream, Encoding.ASCII, false, bufferSize))
                     {
-                        logger.LogDebug(Invariant($"Reading from {path} with size {fileStream.Length} Bytes"));
+                        string lastData = await reader.ReadToEndAsync().ConfigureAwait(false);
 
-                        int bufferSize = 256;
-
-                        fileStream.Seek(0, SeekOrigin.End);
-                        fileStream.Seek(-Math.Min(bufferSize, fileStream.Length), SeekOrigin.Current);
-
-                        using (var reader = new StreamReader(fileStream, Encoding.ASCII, false, bufferSize))
+                        foreach (var reading in lastData.Split('\n'))
                         {
-                            string lastData = await reader.ReadToEndAsync().ConfigureAwait(false);
-
-                            foreach (var reading in lastData.Split('\n'))
+                            if (!string.IsNullOrWhiteSpace(reading))
                             {
-                                if (!string.IsNullOrWhiteSpace(reading))
-                                {
-                                    lastString = reading;
-                                }
+                                lastString = reading;
                             }
                         }
                     }
+                }
 
-                    if (string.IsNullOrWhiteSpace(lastString))
-                    {
-                        throw new IOException("Last String Read From file is empty");
-                    }
+                if (string.IsNullOrWhiteSpace(lastString))
+                {
+                    throw new IOException("Last String Read From file is empty");
+                }
 
-                    logger.LogDebug(Invariant($"Found data {lastString} from {path}"));
+                logger.LogDebug(Invariant($"Found data {lastString} from {path}"));
 
-                    var tokens = lastString.Split(';');
+                var tokens = lastString.Split(';');
 
-                    SensorData sensorData = new SensorData();
+                SensorData sensorData = new SensorData();
 
-                    //Date;Time;Timestamp;PM2_5(ug/m3);AQI(US);AQI(CN);PM10(ug/m3);Outdoor AQI(US);Outdoor AQI(CN);Temperature(C);Temperature(F);Humidity(%RH);CO2(ppm);VOC(ppb)
-                    sensorData.updateTime = new DateTime(DateTimeOffset.FromUnixTimeSeconds(ParseLong(tokens, 2)).Ticks);
+                //Date;Time;Timestamp;PM2_5(ug/m3);AQI(US);AQI(CN);PM10(ug/m3);Outdoor AQI(US);Outdoor AQI(CN);Temperature(C);Temperature(F);Humidity(%RH);CO2(ppm);VOC(ppb)
+                sensorData.updateTime = new DateTime(DateTimeOffset.FromUnixTimeSeconds(ParseLong(tokens, 2)).Ticks);
 
-                    if (lastUpdate != sensorData.updateTime)
-                    {
-                        sensorData.PM25 = ParseFloat(tokens, 3);
-                        sensorData.PM25AQI = ParseFloat(tokens, 4);
-                        sensorData.PM25AQICN = ParseFloat(tokens, 5);
-                        sensorData.PM10 = ParseFloat(tokens, 6);
-                        sensorData.OutsidePM25AQI = ParseFloat(tokens, 7);
-                        sensorData.OutsidePM25AQICN = ParseFloat(tokens, 8);
-                        sensorData.TemperatureC = ParseFloat(tokens, 9);
-                        sensorData.TemperatureF = ParseFloat(tokens, 10);
-                        sensorData.Humidity = ParseFloat(tokens, 11);
-                        sensorData.CO2 = ParseFloat(tokens, 12);
+                if (lastUpdate != sensorData.updateTime)
+                {
+                    sensorData.PM25 = ParseFloat(tokens, 3);
+                    sensorData.PM25AQI = ParseFloat(tokens, 4);
+                    sensorData.PM25AQICN = ParseFloat(tokens, 5);
+                    sensorData.PM10 = ParseFloat(tokens, 6);
+                    sensorData.OutsidePM25AQI = ParseFloat(tokens, 7);
+                    sensorData.OutsidePM25AQICN = ParseFloat(tokens, 8);
+                    sensorData.TemperatureC = ParseFloat(tokens, 9);
+                    sensorData.TemperatureF = ParseFloat(tokens, 10);
+                    sensorData.Humidity = ParseFloat(tokens, 11);
+                    sensorData.CO2 = ParseFloat(tokens, 12);
 
-                        UpdateDelta(sensorData);
-                        lastUpdate = sensorData.updateTime;
-                        logger.LogInfo(Invariant($"Updated data for device {DeviceIP} for time {sensorData.updateTime}"));
-                    }
+                    UpdateDelta(sensorData);
+                    lastUpdate = sensorData.updateTime;
+                    logger.LogInfo(Invariant($"Updated data for device {DeviceIP} for time {sensorData.updateTime}"));
                 }
             }
             catch (Exception ex)
