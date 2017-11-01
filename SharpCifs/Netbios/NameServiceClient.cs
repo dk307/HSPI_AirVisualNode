@@ -1,33 +1,31 @@
 // This code is derived from jcifs smb client library <jcifs at samba dot org>
 // Ported by J. Arturo <webmaster at komodosoft dot net>
-//  
+//
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+using SharpCifs.Smb;
+using SharpCifs.Util;
+using SharpCifs.Util.Sharpen;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Linq;
 using System.Threading;
-using SharpCifs.Smb;
-using SharpCifs.Util;
-using SharpCifs.Util.DbsHelper;
-using SharpCifs.Util.Sharpen;
-
-using Thread = SharpCifs.Util.Sharpen.Thread;
 using System.Threading.Tasks;
+using Thread = SharpCifs.Util.Sharpen.Thread;
 
 namespace SharpCifs.Netbios
 {
@@ -134,7 +132,6 @@ namespace SharpCifs.Netbios
 
             _sndBuf = new byte[SndBufSize];
             _rcvBuf = new byte[RcvBufSize];
-
 
             if (string.IsNullOrEmpty(Ro))
             {
@@ -244,12 +241,11 @@ namespace SharpCifs.Netbios
                     _socketSender = null;
                 }
 
-                _socketSender = new SocketEx(AddressFamily.InterNetwork, 
-                                             SocketType.Dgram, 
+                _socketSender = new SocketEx(AddressFamily.InterNetwork,
+                                             SocketType.Dgram,
                                              ProtocolType.Udp);
 
                 _socketSender.Bind(new IPEndPoint(IPAddress.Any, localPort));
-
 
                 if (_waitResponse)
                 {
@@ -304,8 +300,8 @@ namespace SharpCifs.Netbios
             }
         }
 
-
         private int _recievedLength = -1;
+
         public virtual void Run()
         {
             int nameTrnId;
@@ -342,7 +338,6 @@ namespace SharpCifs.Netbios
 
                     sockEvArg?.Dispose();
 
-
                     if (_thread.IsCanceled)
                         break;
 
@@ -352,7 +347,6 @@ namespace SharpCifs.Netbios
                     }
                     nameTrnId = NameServicePacket.ReadNameTrnId(_rcvBuf, 0);
                     response = (NameServicePacket)_responseTable.Get(nameTrnId);
-
 
                     if (response == null || response.Received)
                     {
@@ -395,13 +389,11 @@ namespace SharpCifs.Netbios
             }
         }
 
-
         private void OnReceiveCompleted(object sender, SocketAsyncEventArgs e)
         {
             //Log.Out("NameServiceClient.OnReceiveCompleted");
             this._recievedLength = e.BytesTransferred;
         }
-
 
         /// <exception cref="System.IO.IOException"></exception>
         internal virtual void Send(NameServicePacket request,
@@ -435,7 +427,7 @@ namespace SharpCifs.Netbios
 
                             //Log.Out($"NameSerciceClient.Send - timeout = {timeout}");
                             EnsureOpen(timeout + 1000);
-                            
+
                             int requestLenght = request.WriteWireFormat(_sndBuf, 0);
                             byte[] msg = new byte[requestLenght];
                             Array.Copy(_sndBuf, msg, requestLenght);
@@ -478,7 +470,7 @@ namespace SharpCifs.Netbios
                                 //    Log.Out($"NameSerciceClient.Send Timeout! - {(DateTime.Now - startTime).TotalMilliseconds} msec");
                                 //}
                             }
-                            
+
                             if (isRecieved)
                                 break;
                         }
@@ -594,7 +586,7 @@ namespace SharpCifs.Netbios
                         throw new UnknownHostException(ioe);
                     }
 
-                    if (response.Received 
+                    if (response.Received
                         && response.ResultCode == 0
                         && response.IsResponse)
                     {
@@ -657,7 +649,7 @@ namespace SharpCifs.Netbios
                                         }
                                         throw new UnknownHostException(ioe);
                                     }
-                                    if (response.Received 
+                                    if (response.Received
                                         && response.ResultCode == 0
                                         && response.IsResponse)
                                     {
