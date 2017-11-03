@@ -28,23 +28,23 @@ using System;
 
 namespace SharpCifs.Util.Sharpen
 {
-    internal class BrokenBarrierException : Exception
+    public class BrokenBarrierException : Exception
     {
     }
 
-    internal class BufferUnderflowException : Exception
+    public class BufferUnderflowException : Exception
     {
     }
 
-    internal class CharacterCodingException : Exception
+    public class CharacterCodingException : Exception
     {
     }
 
-    internal class DataFormatException : Exception
+    public class DataFormatException : Exception
     {
     }
 
-    internal class EofException : Exception
+    public class EofException : Exception
     {
         public EofException()
         {
@@ -55,7 +55,7 @@ namespace SharpCifs.Util.Sharpen
         }
     }
 
-    internal class Error : Exception
+    public class Error : Exception
     {
         public Error()
         {
@@ -74,45 +74,45 @@ namespace SharpCifs.Util.Sharpen
         }
     }
 
-    internal class ExecutionException : Exception
+    public class ExecutionException : Exception
     {
         public ExecutionException(Exception inner) : base("Execution failed", inner)
         {
         }
     }
 
-    internal class InstantiationException : Exception
+    public class InstantiationException : Exception
     {
     }
 
-    internal class InterruptedIoException : Exception
+    public class InterruptedIoException : Exception
     {
         public InterruptedIoException(string msg) : base(msg)
         {
         }
     }
 
-    internal class MissingResourceException : Exception
+    public class MissingResourceException : Exception
     {
     }
 
-    internal class NoSuchAlgorithmException : Exception
+    public class NoSuchAlgorithmException : Exception
     {
     }
 
-    internal class NoSuchElementException : Exception
+    public class NoSuchElementException : Exception
     {
     }
 
-    internal class NoSuchMethodException : Exception
+    public class NoSuchMethodException : Exception
     {
     }
 
-    internal class OverlappingFileLockException : Exception
+    public class OverlappingFileLockException : Exception
     {
     }
 
-    internal class ParseException : Exception
+    public class ParseException : Exception
     {
         public ParseException()
         {
@@ -124,7 +124,7 @@ namespace SharpCifs.Util.Sharpen
         }
     }
 
-    internal class RuntimeException : Exception
+    public class RuntimeException : Exception
     {
         public RuntimeException()
         {
@@ -143,11 +143,11 @@ namespace SharpCifs.Util.Sharpen
         }
     }
 
-    internal class StringIndexOutOfBoundsException : Exception
+    public class StringIndexOutOfBoundsException : Exception
     {
     }
 
-    internal class UnknownHostException : Exception
+    public class UnknownHostException : Exception
     {
         public UnknownHostException()
         {
@@ -162,44 +162,44 @@ namespace SharpCifs.Util.Sharpen
         }
     }
 
-    internal class UnsupportedEncodingException : Exception
+    public class UnsupportedEncodingException : Exception
     {
     }
 
-    internal class UriSyntaxException : Exception
+    public class UriSyntaxException : Exception
     {
         public UriSyntaxException(string s, string msg) : base(s + " " + msg)
         {
         }
     }
 
-    internal class ZipException : Exception
+    public class ZipException : Exception
     {
     }
 
-    internal class GitException : Exception
+    public class GitException : Exception
     {
     }
 
-    internal class ConnectException : Exception
+    public class ConnectException : Exception
     {
         public ConnectException(string msg) : base(msg)
         {
         }
     }
 
-    internal class KeyManagementException : Exception
+    public class KeyManagementException : Exception
     {
     }
 
-    internal class IllegalCharsetNameException : Exception
+    public class IllegalCharsetNameException : Exception
     {
         public IllegalCharsetNameException(string msg) : base(msg)
         {
         }
     }
 
-    internal class UnsupportedCharsetException : Exception
+    public class UnsupportedCharsetException : Exception
     {
         public UnsupportedCharsetException(string msg) : base(msg)
         {

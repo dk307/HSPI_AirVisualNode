@@ -53,65 +53,6 @@ namespace SharpCifs
 
         public static string DefaultOemEncoding = "UTF-8"; //"Cp850";
 
-        static Config()
-        {
-            int level;
-            FileInputStream fis = null;
-            _log = LogStream.GetInstance();
-
-            try
-            {
-                string filename = Runtime.GetProperty("jcifs.properties");
-                if (filename != null && filename.Length > 1)
-                {
-                    fis = new FileInputStream(filename);
-                }
-                Load(fis);
-                if (fis != null)
-                {
-                    fis.Close();
-                }
-            }
-            catch (IOException ioe)
-            {
-                if (_log.Level > 0)
-                {
-                    Runtime.PrintStackTrace(ioe, _log);
-                }
-            }
-
-            if ((level = GetInt("jcifs.util.loglevel", -1)) != -1)
-            {
-                _log.SetLevel(level);
-            }
-
-            try
-            {
-                Runtime.GetBytesForString(string.Empty, DefaultOemEncoding);
-            }
-            catch (Exception ex)
-            {
-                if (_log.Level >= 2)
-                {
-                    _log.WriteLine("WARNING: The default OEM encoding " + DefaultOemEncoding + " does not appear to be supported by this JRE. The default encoding will be US-ASCII."
-                        );
-                }
-
-                //DEFAULT_OEM_ENCODING = "US-ASCII";
-            }
-
-            if (_log.Level >= 4)
-            {
-                try
-                {
-                    _prp.Store(_log);
-                }
-                catch (IOException)
-                {
-                }
-            }
-        }
-
         /// <summary>
         /// Apply the value written in Config.
         /// </summary>
@@ -141,67 +82,6 @@ namespace SharpCifs
         public static void RegisterSmbURLHandler()
         {
             throw new NotImplementedException();
-        }
-
-        // supress javadoc constructor summary by removing 'protected'
-        /// <summary>Set the default properties of the static Properties used by <tt>Config</tt>.
-        /// </summary>
-        /// <remarks>
-        /// Set the default properties of the static Properties used by <tt>Config</tt>. This permits
-        /// a different Properties object/file to be used as the source of properties for
-        /// use by the jCIFS library. The Properties must be set <i>before jCIFS
-        /// classes are accessed</i> as most jCIFS classes load properties statically once.
-        /// Using this method will also override properties loaded
-        /// using the <tt>-Djcifs.properties=</tt> commandline parameter.
-        /// </remarks>
-        public static void SetProperties(Properties prp)
-        {
-            Config._prp = new Properties(prp);
-            try
-            {
-                Config._prp.PutAll(Runtime.GetProperties());
-            }
-            catch (SecurityException)
-            {
-                if (_log.Level > 1)
-                {
-                    _log.WriteLine("SecurityException: jcifs will ignore System properties");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Load the <code>Config</code> with properties from the stream
-        /// <code>in</code> from a <code>Properties</code> file.
-        /// </summary>
-        /// <remarks>
-        /// Load the <code>Config</code> with properties from the stream
-        /// <code>in</code> from a <code>Properties</code> file.
-        /// </remarks>
-        /// <exception cref="System.IO.IOException"></exception>
-        public static void Load(InputStream input)
-        {
-            if (input != null)
-            {
-                _prp.Load(input);
-            }
-            try
-            {
-                _prp.PutAll(Runtime.GetProperties());
-            }
-            catch (SecurityException)
-            {
-                if (_log.Level > 1)
-                {
-                    _log.WriteLine("SecurityException: jcifs will ignore System properties");
-                }
-            }
-        }
-
-        /// <exception cref="System.IO.IOException"></exception>
-        public static void Store(OutputStream output, string header)
-        {
-            _prp.Store(output);
         }
 
         /// <summary>Add a property.</summary>
@@ -378,48 +258,7 @@ namespace SharpCifs
             string b = GetProperty(key);
             if (b != null)
             {
-                def = b.ToLower().Equals("true");
-            }
-            return def;
-        }
-
-        /// <summary>
-        /// Retrieve an array of <tt>InetAddress</tt> created from a property
-        /// value containting a <tt>delim</tt> separated list of hostnames and/or
-        /// ipaddresses.
-        /// </summary>
-        /// <remarks>
-        /// Retrieve an array of <tt>InetAddress</tt> created from a property
-        /// value containting a <tt>delim</tt> separated list of hostnames and/or
-        /// ipaddresses.
-        /// </remarks>
-        public static IPAddress[] GetInetAddressArray(string key, string delim, IPAddress
-            [] def)
-        {
-            string p = GetProperty(key);
-            if (p != null)
-            {
-                StringTokenizer tok = new StringTokenizer(p, delim);
-                int len = tok.CountTokens();
-                IPAddress[] arr = new IPAddress[len];
-                for (int i = 0; i < len; i++)
-                {
-                    string addr = tok.NextToken();
-                    try
-                    {
-                        arr[i] = Extensions.GetAddressByName(addr);
-                    }
-                    catch (UnknownHostException uhe)
-                    {
-                        if (_log.Level > 0)
-                        {
-                            _log.WriteLine(addr);
-                            Runtime.PrintStackTrace(uhe, _log);
-                        }
-                        return def;
-                    }
-                }
-                return arr;
+                def = b.ToLower(System.Globalization.CultureInfo.InvariantCulture).Equals("true");
             }
             return def;
         }

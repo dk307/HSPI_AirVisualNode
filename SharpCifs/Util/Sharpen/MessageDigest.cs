@@ -20,15 +20,18 @@ namespace SharpCifs.Util.Sharpen
         }
 
         public abstract byte[] Digest();
+
         public abstract int GetDigestLength();
+
         public static MessageDigest GetInstance(string algorithm)
         {
-            switch (algorithm.ToLower())
+            switch (algorithm.ToLower(System.Globalization.CultureInfo.InvariantCulture))
             {
                 case "sha-1":
                     //System.Security.CryptographySHA1Managed not found
                     //return new MessageDigest<SHA1Managed> ();
                     return new MessageDigest<System.Security.Cryptography.SHA1>();
+
                 case "md5":
                     return new MessageDigest<Md5Managed>();
             }
@@ -37,19 +40,21 @@ namespace SharpCifs.Util.Sharpen
         }
 
         public abstract void Reset();
+
         public abstract void Update(byte[] b);
+
         public abstract void Update(byte b);
+
         public abstract void Update(byte[] b, int offset, int len);
     }
 
-
-    internal class MessageDigest<TAlgorithm> 
+    internal class MessageDigest<TAlgorithm>
         : MessageDigest where TAlgorithm : HashAlgorithm //, new() //use static `Create` method
     {
         private TAlgorithm _hash;
+
         //private CryptoStream _stream; //don't work .NET Core
         private MemoryStream _stream;
-
 
         public MessageDigest()
         {
@@ -90,7 +95,7 @@ namespace SharpCifs.Util.Sharpen
             var createMethod = typeof(TAlgorithm).GetRuntimeMethod("Create", new Type[0]);
             _hash = (TAlgorithm)createMethod.Invoke(null, new object[] { });
 
-            //HashAlgorithm cannot cast `ICryptoTransform` on .NET Core, gave up using CryptoStream. 
+            //HashAlgorithm cannot cast `ICryptoTransform` on .NET Core, gave up using CryptoStream.
             //_stream = new CryptoStream(Stream.Null, _hash, CryptoStreamMode.Write);
             //_stream = new CryptoStream(_tmpStream, (ICryptoTransform)_hash, CryptoStreamMode.Write);
             _stream = new MemoryStream();

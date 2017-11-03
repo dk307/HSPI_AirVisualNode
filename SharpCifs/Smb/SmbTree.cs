@@ -41,8 +41,8 @@ namespace SharpCifs.Smb
         {
             // used by SmbFile.isOpen
             this.Session = session;
-            this.Share = share.ToUpper();
-            if (service != null && service.StartsWith("??") == false)
+            this.Share = share.ToUpper(System.Globalization.CultureInfo.InvariantCulture);
+            if (service != null && service.StartsWith("??", StringComparison.Ordinal) == false)
             {
                 this.Service = service;
             }

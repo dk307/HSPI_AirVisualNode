@@ -1,16 +1,16 @@
 // This code is derived from jcifs smb client library <jcifs at samba dot org>
 // Ported by J. Arturo <webmaster at komodosoft dot net>
-//  
+//
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -102,7 +102,7 @@ namespace SharpCifs.Smb
             byte[] passwordBytes;
             try
             {
-                passwordBytes = Runtime.GetBytesForString(password.ToUpper(), SmbConstants.OemEncoding);
+                passwordBytes = Runtime.GetBytesForString(password.ToUpper(System.Globalization.CultureInfo.InvariantCulture), SmbConstants.OemEncoding);
             }
             catch (UnsupportedEncodingException uee)
             {
@@ -180,8 +180,8 @@ namespace SharpCifs.Smb
                 Md4 md4 = new Md4();
                 md4.Update(Runtime.GetBytesForString(password, SmbConstants.UniEncoding));
                 Hmact64 hmac = new Hmact64(md4.Digest());
-                hmac.Update(Runtime.GetBytesForString(user.ToUpper(), SmbConstants.UniEncoding));
-                hmac.Update(Runtime.GetBytesForString(domain.ToUpper(), SmbConstants.UniEncoding));
+                hmac.Update(Runtime.GetBytesForString(user.ToUpper(System.Globalization.CultureInfo.InvariantCulture), SmbConstants.UniEncoding));
+                hmac.Update(Runtime.GetBytesForString(domain.ToUpper(System.Globalization.CultureInfo.InvariantCulture), SmbConstants.UniEncoding));
                 hmac = new Hmact64(hmac.Digest());
                 hmac.Update(challenge);
                 hmac.Update(clientChallenge);
@@ -252,7 +252,7 @@ namespace SharpCifs.Smb
                 Md4 md4 = new Md4();
                 md4.Update(Runtime.GetBytesForString(password, SmbConstants.UniEncoding));
                 Hmact64 hmac = new Hmact64(md4.Digest());
-                hmac.Update(Runtime.GetBytesForString(username.ToUpper(), SmbConstants.UniEncoding));
+                hmac.Update(Runtime.GetBytesForString(username.ToUpper(System.Globalization.CultureInfo.InvariantCulture), SmbConstants.UniEncoding));
                 hmac.Update(Runtime.GetBytesForString(domain, SmbConstants.UniEncoding));
                 return hmac.Digest();
             }
@@ -716,9 +716,9 @@ namespace SharpCifs.Smb
                                 Random.NextBytes(ClientChallenge);
                             }
                             Hmact64 hmac = new Hmact64(md4.Digest());
-                            hmac.Update(Runtime.GetBytesForString(Username.ToUpper(),
+                            hmac.Update(Runtime.GetBytesForString(Username.ToUpper(System.Globalization.CultureInfo.InvariantCulture),
                                         SmbConstants.UniEncoding));
-                            hmac.Update(Runtime.GetBytesForString(Domain.ToUpper(),
+                            hmac.Update(Runtime.GetBytesForString(Domain.ToUpper(System.Globalization.CultureInfo.InvariantCulture),
                                         SmbConstants.UniEncoding));
                             byte[] ntlmv2Hash = hmac.Digest();
                             hmac = new Hmact64(ntlmv2Hash);
@@ -758,12 +758,11 @@ namespace SharpCifs.Smb
             if (obj is NtlmPasswordAuthentication)
             {
                 NtlmPasswordAuthentication ntlm = (NtlmPasswordAuthentication)obj;
-                if (ntlm.Domain.ToUpper().Equals(Domain.ToUpper())
-                    && ntlm.Username.ToUpper().Equals(Username.ToUpper()))
+                if (ntlm.Domain.ToUpper().Equals(Domain.ToUpper(System.Globalization.CultureInfo.InvariantCulture))
+                    && ntlm.Username.ToUpper().Equals(Username.ToUpper(System.Globalization.CultureInfo.InvariantCulture)))
                 {
                     if (HashesExternal && ntlm.HashesExternal)
                     {
-
                         return Arrays.Equals(AnsiHash, ntlm.AnsiHash)
                                && Arrays.Equals(UnicodeHash, ntlm.UnicodeHash);
                     }
@@ -780,7 +779,7 @@ namespace SharpCifs.Smb
         /// <remarks>Return the upcased username hash code.</remarks>
         public override int GetHashCode()
         {
-            return GetName().ToUpper().GetHashCode();
+            return GetName().ToUpper(System.Globalization.CultureInfo.InvariantCulture).GetHashCode();
         }
 
         /// <summary>

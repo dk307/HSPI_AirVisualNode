@@ -100,7 +100,7 @@
   <ItemGroup>
     <Compile Include="AirVisualNode.cs" />
     <Compile Include="AirVisualNodeConnectorManager.cs" />
-    <Compile Include="Config.cs" />
+    <Compile Include="SharpCifs\Config.cs" />
     <Compile Include="ConfigPage.cs" />
     <Compile Include="Connector\AirVisualNodeConnector.cs" />
     <Compile Include="Connector\ILogger.cs" />
@@ -214,7 +214,6 @@
     <Compile Include="SharpCifs\Util\Sharpen\Extensions.cs" />
     <Compile Include="SharpCifs\Util\Sharpen\FileInputStream.cs" />
     <Compile Include="SharpCifs\Util\Sharpen\FilePath.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\FileReader.cs" />
     <Compile Include="SharpCifs\Util\Sharpen\FileWriter.cs" />
     <Compile Include="SharpCifs\Util\Sharpen\Hashtable.cs" />
     <Compile Include="SharpCifs\Util\Sharpen\HttpURLConnection.cs" />

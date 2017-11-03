@@ -73,29 +73,6 @@ namespace SharpCifs.Netbios
     /// <since>jcifs-0.1</since>
     internal sealed class NbtAddress
     {
-        internal static readonly string AnyHostsName
-            = "*\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000";
-
-        /// <summary>
-        /// This is a special name for querying the master browser that serves the
-        /// list of hosts found in "Network Neighborhood".
-        /// </summary>
-        /// <remarks>
-        /// This is a special name for querying the master browser that serves the
-        /// list of hosts found in "Network Neighborhood".
-        /// </remarks>
-        public static readonly string MasterBrowserName = "\u0001\u0002__MSBROWSE__\u0002";
-
-        /// <summary>
-        /// A special generic name specified when connecting to a host for which
-        /// a name is not known.
-        /// </summary>
-        /// <remarks>
-        /// A special generic name specified when connecting to a host for which
-        /// a name is not known. Not all servers respond to this name.
-        /// </remarks>
-        public static readonly string SmbserverName = "*SMBSERVER     ";
-
         /// <summary>A B node only broadcasts name queries.</summary>
         /// <remarks>
         /// A B node only broadcasts name queries. This is the default if a
