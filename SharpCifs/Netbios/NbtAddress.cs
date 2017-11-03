@@ -271,8 +271,6 @@ namespace SharpCifs.Netbios
 
         internal byte[] MacAddress;
 
-        internal string CalledName;
-
         internal NbtAddress(Name hostName, int address, bool groupName, int nodeType)
         {
             this.HostName = hostName;

@@ -36,8 +36,6 @@ namespace SharpCifs.Smb
 
         private int _flags = unchecked(0x00);
 
-        private int _fid;
-
         private int _pad;
 
         private int _pad1;

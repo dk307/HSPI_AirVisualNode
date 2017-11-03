@@ -49,8 +49,6 @@ namespace SharpCifs
         /// <remarks>The static <code>Properties</code>.</remarks>
         private static Properties _prp = new Properties();
 
-        private static LogStream _log;
-
         public static string DefaultOemEncoding = "UTF-8"; //"Cp850";
 
         /// <summary>
@@ -131,12 +129,8 @@ namespace SharpCifs
                 {
                     def = Convert.ToInt32(s);
                 }
-                catch (FormatException nfe)
+                catch (FormatException)
                 {
-                    if (_log.Level > 0)
-                    {
-                        Runtime.PrintStackTrace(nfe, _log);
-                    }
                 }
             }
             return def;
@@ -155,12 +149,8 @@ namespace SharpCifs
                 {
                     result = Convert.ToInt32(s);
                 }
-                catch (FormatException nfe)
+                catch (FormatException)
                 {
-                    if (_log.Level > 0)
-                    {
-                        Runtime.PrintStackTrace(nfe, _log);
-                    }
                 }
             }
             return result;
@@ -181,12 +171,8 @@ namespace SharpCifs
                 {
                     def = long.Parse(s);
                 }
-                catch (FormatException nfe)
+                catch (FormatException)
                 {
-                    if (_log.Level > 0)
-                    {
-                        Runtime.PrintStackTrace(nfe, _log);
-                    }
                 }
             }
             return def;
@@ -207,13 +193,8 @@ namespace SharpCifs
                 {
                     def = Extensions.GetAddressByName(addr);
                 }
-                catch (UnknownHostException uhe)
+                catch (UnknownHostException)
                 {
-                    if (_log.Level > 0)
-                    {
-                        _log.WriteLine(addr);
-                        Runtime.PrintStackTrace(uhe, _log);
-                    }
                 }
             }
             return def;
@@ -230,13 +211,8 @@ namespace SharpCifs
                 {
                     result = Extensions.GetAddressByName(addr);
                 }
-                catch (UnknownHostException uhe)
+                catch (UnknownHostException)
                 {
-                    if (_log.Level > 0)
-                    {
-                        _log.WriteLine("Ignoring jcifs.smb.client.laddr address: " + addr);
-                        Runtime.PrintStackTrace(uhe, _log);
-                    }
                 }
             }
 
