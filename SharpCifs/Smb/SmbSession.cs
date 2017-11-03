@@ -331,7 +331,7 @@ namespace SharpCifs.Smb
                                         {
                                             transport.Send(request, response);
                                         }
-                                        catch (SmbAuthException sae)
+                                        catch (SmbAuthException)
                                         {
                                             throw;
                                         }

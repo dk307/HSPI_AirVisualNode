@@ -8,7 +8,6 @@ namespace SharpCifs.Util.Sharpen
     internal class FilePath
     {
         private string _path;
-        private static long _tempCounter;
 
         public FilePath()
         {
@@ -126,73 +125,6 @@ namespace SharpCifs.Util.Sharpen
         public bool IsAbsolute()
         {
             return Path.IsPathRooted(_path);
-        }
-
-        public bool IsDirectory()
-        {
-            return false; // FileHelper.Instance.IsDirectory(this);
-        }
-
-        public bool IsFile()
-        {
-            return false; //FileHelper.Instance.IsFile (this);
-        }
-
-        public long LastModified()
-        {
-            return 0; // FileHelper.Instance.LastModified(this);
-        }
-
-        public long Length()
-        {
-            return 0; // FileHelper.Instance.Length(this);
-        }
-
-        public string[] List()
-        {
-            return List(null);
-        }
-
-        public string[] List(IFilenameFilter filter)
-        {
-            try
-            {
-                if (IsFile())
-                    return null;
-                List<string> list = new List<string>();
-                foreach (string filePth in Directory.GetFileSystemEntries(_path))
-                {
-                    string fileName = Path.GetFileName(filePth);
-                    if ((filter == null) || filter.Accept(this, fileName))
-                    {
-                        list.Add(fileName);
-                    }
-                }
-                return list.ToArray();
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        public FilePath[] ListFiles()
-        {
-            try
-            {
-                if (IsFile())
-                    return null;
-                List<FilePath> list = new List<FilePath>();
-                foreach (string filePath in Directory.GetFileSystemEntries(_path))
-                {
-                    list.Add(new FilePath(filePath));
-                }
-                return list.ToArray();
-            }
-            catch
-            {
-                return null;
-            }
         }
 
         public bool Mkdir()

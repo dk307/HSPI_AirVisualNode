@@ -7,17 +7,7 @@ namespace SharpCifs.Util.Sharpen
     {
         public const int Default = 2;
 
-        public static DateFormat GetDateTimeInstance(int dateStyle, int timeStyle)
-        {
-            return GetDateTimeInstance(dateStyle, timeStyle, CultureInfo.CurrentCulture);
-        }
-
-        public static DateFormat GetDateTimeInstance(int dateStyle, int timeStyle, CultureInfo aLocale)
-        {
-            return new SimpleDateFormat(aLocale.DateTimeFormat.FullDateTimePattern, aLocale);
-        }
-
-        TimeZoneInfo _timeZone;
+        private TimeZoneInfo _timeZone;
 
         public abstract DateTime Parse(string value);
 
@@ -34,4 +24,3 @@ namespace SharpCifs.Util.Sharpen
         public abstract string Format(DateTime time);
     }
 }
-

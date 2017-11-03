@@ -262,46 +262,5 @@ namespace SharpCifs
             }
             return def;
         }
-
-        /// <summary>
-        /// Retrieve an array of <tt>InetAddress</tt> created from a property
-        /// value containting a <tt>delim</tt> separated list of hostnames and/or
-        /// ipaddresses.
-        /// </summary>
-        /// <remarks>
-        /// Retrieve an array of <tt>InetAddress</tt> created from a property
-        /// value containting a <tt>delim</tt> separated list of hostnames and/or
-        /// ipaddresses.
-        /// </remarks>
-        public static IPAddress[] GetInetAddressArray(string key, string delim, IPAddress
-            [] def)
-        {
-            string p = GetProperty(key);
-            if (p != null)
-            {
-                StringTokenizer tok = new StringTokenizer(p, delim);
-                int len = tok.CountTokens();
-                IPAddress[] arr = new IPAddress[len];
-                for (int i = 0; i < len; i++)
-                {
-                    string addr = tok.NextToken();
-                    try
-                    {
-                        arr[i] = Extensions.GetAddressByName(addr);
-                    }
-                    catch (UnknownHostException uhe)
-                    {
-                        if (_log.Level > 0)
-                        {
-                            _log.WriteLine(addr);
-                            Runtime.PrintStackTrace(uhe, _log);
-                        }
-                        return def;
-                    }
-                }
-                return arr;
-            }
-            return def;
-        }
     }
 }

@@ -14,31 +14,17 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Text;
-using SharpCifs.Dcerpc;
-using SharpCifs.Dcerpc.Msrpc;
-using SharpCifs.Netbios;
 using SharpCifs.Util;
 using SharpCifs.Util.Sharpen;
-using System.Threading.Tasks;
+using System;
 using System.Globalization;
+using System.IO;
+using System.Text;
 
 namespace SharpCifs.Smb
 {
     internal sealed class SmbFile : UrlConnection
     {
-        /// <summary>
-        /// Apply the value written in Config, and dispose unused TCP connection cache.
-        /// </summary>
-        public static void Initialize()
-        {
-            SmbConstants.ApplyConfig();
-        }
-
         internal const int ORdonly = 0x01;
 
         internal const int OWronly = 0x02;

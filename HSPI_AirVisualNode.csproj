@@ -237,9 +237,7 @@
     <Compile Include="SharpCifs\Util\Sharpen\Properties.cs" />
     <Compile Include="SharpCifs\Util\Sharpen\Reference.cs" />
     <Compile Include="SharpCifs\Util\Sharpen\Runtime.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\SimpleDateFormat.cs" />
     <Compile Include="SharpCifs\Util\Sharpen\SocketEx.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\StringTokenizer.cs" />
     <Compile Include="SharpCifs\Util\Sharpen\SynchronizedList.cs" />
     <Compile Include="SharpCifs\Util\Sharpen\Thread.cs" />
     <Compile Include="SharpCifs\Util\Sharpen\WrappedSystemStream.cs" />
