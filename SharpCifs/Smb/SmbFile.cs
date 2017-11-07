@@ -315,10 +315,6 @@ namespace SharpCifs.Smb
             {
                 throw new SmbException("Failed to connect to server", uhe);
             }
-            catch (SmbException)
-            {
-                throw;
-            }
             catch (IOException ioe)
             {
                 throw new SmbException("Failed to connect to server", ioe);
