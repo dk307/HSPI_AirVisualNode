@@ -2,7 +2,7 @@ Homeseer AirVisual Node PlugIn
 =====================================
 Overview
 --------
-This plugin displays integrates AirVisual Node with Homeseer.
+This plugin integrates AirVisual Node with Homeseer.
 
 It reads smb share of device periodically to pick up values.
 
