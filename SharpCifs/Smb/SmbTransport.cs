@@ -37,13 +37,10 @@ namespace SharpCifs.Smb
 
         internal static SmbTransport GetSmbTransport(UniAddress address)
         {
-            lock (typeof(SmbTransport))
-            {
-                return GetSmbTransport(address,
-                                       SmbConstants.Laddr,
-                                       SmbConstants.Lport,
-                                       null);
-            }
+            return GetSmbTransport(address,
+                                  SmbConstants.Laddr,
+                                  SmbConstants.Lport,
+                                  null);
         }
 
         internal static SmbTransport GetSmbTransport(UniAddress address,
@@ -51,33 +48,7 @@ namespace SharpCifs.Smb
                                                      int localPort,
                                                      string hostName)
         {
-            lock (typeof(SmbTransport))
-            {
-                SmbTransport conn;
-
-                lock (SmbConstants.Connections)
-                {
-                    if (SmbConstants.SsnLimit != 1)
-                    {
-                        conn = SmbConstants.Connections
-                                           .FirstOrDefault(c => c.Matches(address,
-                                                                          localAddr,
-                                                                          localPort,
-                                                                          hostName)
-                                                                && (SmbConstants.SsnLimit == 0
-                                                                    || c.Sessions.Count < SmbConstants.SsnLimit));
-
-                        if (conn != null)
-                        {
-                            return conn;
-                        }
-                    }
-
-                    conn = new SmbTransport(address, localAddr, localPort);
-                    SmbConstants.Connections.Insert(0, conn);
-                }
-                return conn;
-            }
+            return new SmbTransport(address, localAddr, localPort);
         }
 
         internal class ServerData
