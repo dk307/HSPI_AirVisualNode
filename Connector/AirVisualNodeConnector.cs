@@ -80,7 +80,7 @@ namespace Hspi.Connector
                         var length = fileStream.Length;
                         logger.LogDebug(Invariant($"Reading from {path} with size {length} Bytes"));
 
-                        int bufferSize = 16 * 1024;
+                        int bufferSize = 512;
                         fileStream.Seek(-Math.Min(bufferSize, length), SeekOrigin.End);
 
                         var pos = fileStream.Position;
