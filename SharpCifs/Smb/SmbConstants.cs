@@ -1,16 +1,16 @@
 // This code is derived from jcifs smb client library <jcifs at samba dot org>
 // Ported by J. Arturo <webmaster at komodosoft dot net>
-//  
+//
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -94,7 +94,7 @@ namespace SharpCifs.Smb
 
         public static readonly int DefaultConnTimeout = 35000;
 
-        public static IPAddress Laddr { get; internal set; } 
+        public static IPAddress Laddr { get; internal set; }
             = Config.GetLocalHost();
 
         public static int Lport { get; internal set; }
@@ -293,7 +293,7 @@ namespace SharpCifs.Smb
 
         public static string UniEncoding = "UTF-16LE";
 
-        public static int DefaultFlags2 { get; internal set; } 
+        public static int DefaultFlags2 { get; internal set; }
             = Flags2LongFilenames
                 | Flags2ExtendedAttributes
                 | (UseExtsec
@@ -309,7 +309,7 @@ namespace SharpCifs.Smb
                     ? Flags2Unicode
                     : 0);
 
-        public static int DefaultCapabilities { get; internal set; } 
+        public static int DefaultCapabilities { get; internal set; }
             = (UseNtsmbs
                 ? CapNtSmbs
                 : 0)
@@ -352,7 +352,7 @@ namespace SharpCifs.Smb
 
         public static readonly int VcNumber = 1;
 
-        public static SmbTransport NullTransport = new SmbTransport(null, 0, null, 0);
+        public static SmbTransport NullTransport = new SmbTransport(null, null, 0);
         // file attribute encoding
         // extended file attribute encoding(others same as above)
         // access mask encoding

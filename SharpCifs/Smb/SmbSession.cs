@@ -48,8 +48,6 @@ namespace SharpCifs.Smb
 
         private UniAddress _address;
 
-        private int _port;
-
         private int _localPort;
 
         private IPAddress _localAddr;
@@ -63,14 +61,12 @@ namespace SharpCifs.Smb
         internal string NetbiosName;
 
         internal SmbSession(UniAddress address,
-                            int port,
-                            IPAddress localAddr,
+                             IPAddress localAddr,
                             int localPort,
                             NtlmPasswordAuthentication auth)
         {
             // Transport parameters allows trans to be removed from CONNECTIONS
             this._address = address;
-            this._port = port;
             this._localAddr = localAddr;
             this._localPort = localPort;
             this.Auth = auth;
@@ -124,8 +120,7 @@ namespace SharpCifs.Smb
                 if (transport == null)
                 {
                     transport = SmbTransport.GetSmbTransport(_address,
-                                                             _port,
-                                                             _localAddr,
+                                                              _localAddr,
                                                              _localPort,
                                                              null);
                 }

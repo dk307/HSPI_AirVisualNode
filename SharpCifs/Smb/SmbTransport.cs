@@ -35,12 +35,11 @@ namespace SharpCifs.Smb
 
         internal static LogStream LogStatic = LogStream.GetInstance();
 
-        internal static SmbTransport GetSmbTransport(UniAddress address, int port)
+        internal static SmbTransport GetSmbTransport(UniAddress address)
         {
             lock (typeof(SmbTransport))
             {
                 return GetSmbTransport(address,
-                                       port,
                                        SmbConstants.Laddr,
                                        SmbConstants.Lport,
                                        null);
@@ -48,7 +47,6 @@ namespace SharpCifs.Smb
         }
 
         internal static SmbTransport GetSmbTransport(UniAddress address,
-                                                     int port,
                                                      IPAddress localAddr,
                                                      int localPort,
                                                      string hostName)
@@ -63,7 +61,6 @@ namespace SharpCifs.Smb
                     {
                         conn = SmbConstants.Connections
                                            .FirstOrDefault(c => c.Matches(address,
-                                                                          port,
                                                                           localAddr,
                                                                           localPort,
                                                                           hostName)
@@ -76,7 +73,7 @@ namespace SharpCifs.Smb
                         }
                     }
 
-                    conn = new SmbTransport(address, port, localAddr, localPort);
+                    conn = new SmbTransport(address, localAddr, localPort);
                     SmbConstants.Connections.Insert(0, conn);
                 }
                 return conn;
@@ -139,8 +136,6 @@ namespace SharpCifs.Smb
 
         internal SocketEx Socket;
 
-        internal int Port;
-
         internal int Mid;
 
         internal OutputStream Out;
@@ -178,13 +173,11 @@ namespace SharpCifs.Smb
         internal string TconHostName;
 
         internal SmbTransport(UniAddress address,
-                              int port,
-                              IPAddress localAddr,
+                               IPAddress localAddr,
                               int localPort)
         {
             Server = new ServerData(this);
             this.Address = address;
-            this.Port = port;
             this.LocalAddr = localAddr;
             this.LocalPort = localPort;
         }
@@ -221,7 +214,7 @@ namespace SharpCifs.Smb
                         session.Logoff(false);
                     }
                 }
-                ssn = new SmbSession(Address, Port, LocalAddr, LocalPort, auth);
+                ssn = new SmbSession(Address, LocalAddr, LocalPort, auth);
                 ssn.transport = this;
                 Sessions.Add(ssn);
                 return ssn;
@@ -229,8 +222,7 @@ namespace SharpCifs.Smb
         }
 
         internal virtual bool Matches(UniAddress address,
-                                      int port,
-                                      IPAddress localAddr,
+                                       IPAddress localAddr,
                                       int localPort,
                                       string hostName)
         {
@@ -241,9 +233,6 @@ namespace SharpCifs.Smb
             return (TconHostName == null
                         || Runtime.EqualsIgnoreCase(hostName, TconHostName))
                    && address.Equals(this.Address)
-                   && (port == -1
-                        || port == this.Port
-                        || (port == 445 && this.Port == 139))
                    && (localAddr == this.LocalAddr
                         || (localAddr != null && localAddr.Equals(this.LocalAddr)))
                    && localPort == this.LocalPort;
@@ -272,37 +261,28 @@ namespace SharpCifs.Smb
         }
 
         /// <exception cref="System.IO.IOException"></exception>
-        private void Negotiate(int port, ServerMessageBlock resp)
+        private void Negotiate(ServerMessageBlock resp)
         {
             lock (Sbuf)
             {
-                if (port == 139)
-                {
-                    throw new NotSupportedException("Port 139");
-                }
-                else
-                {
-                    if (port == -1)
-                    {
-                        port = SmbConstants.DefaultPort;
-                    }
-                    // 445
-                    Socket = new SocketEx(AddressFamily.InterNetwork,
-                                          SocketType.Stream,
-                                          ProtocolType.Tcp);
+                int port = SmbConstants.DefaultPort;
 
-                    //TCPローカルポートは、毎回空いているものを使う。
-                    //https://blogs.msdn.microsoft.com/dgorti/2005/09/18/only-one-usage-of-each-socket-address-protocolnetwork-addressport-is-normally-permitted/
-                    Socket.Bind(new IPEndPoint(LocalAddr, 0));
+                // 445
+                Socket = new SocketEx(AddressFamily.InterNetwork,
+                                      SocketType.Stream,
+                                      ProtocolType.Tcp);
 
-                    Socket.Connect(new IPEndPoint(IPAddress.Parse(Address.GetHostAddress()),
-                                                  port), // <- 445
-                                   SmbConstants.ConnTimeout);
+                //TCPローカルポートは、毎回空いているものを使う。
+                //https://blogs.msdn.microsoft.com/dgorti/2005/09/18/only-one-usage-of-each-socket-address-protocolnetwork-addressport-is-normally-permitted/
+                Socket.Bind(new IPEndPoint(LocalAddr, 0));
 
-                    Socket.SoTimeOut = SmbConstants.SoTimeout;
-                    Out = Socket.GetOutputStream();
-                    In = Socket.GetInputStream();
-                }
+                Socket.Connect(new IPEndPoint(IPAddress.Parse(Address.GetHostAddress()),
+                                              port), // <- 445
+                               SmbConstants.ConnTimeout);
+
+                Socket.SoTimeOut = SmbConstants.SoTimeout;
+                Out = Socket.GetOutputStream();
+                In = Socket.GetInputStream();
                 if (++Mid == 32000)
                 {
                     Mid = 1;
@@ -359,17 +339,7 @@ namespace SharpCifs.Smb
         protected internal override void DoConnect()
         {
             SmbComNegotiateResponse resp = new SmbComNegotiateResponse(Server);
-            try
-            {
-                Negotiate(Port, resp);
-            }
-            catch (ConnectException)
-            {
-                Port = (Port == -1 || Port == SmbConstants.DefaultPort)
-                            ? 139
-                            : SmbConstants.DefaultPort;
-                Negotiate(Port, resp);
-            }
+            Negotiate(resp);
             if (resp.DialectIndex > 10)
             {
                 throw new SmbException("This client does not support the negotiated dialect.");
@@ -799,7 +769,7 @@ namespace SharpCifs.Smb
 
         public override string ToString()
         {
-            return base.ToString() + "[" + Address + ":" + Port + "]";
+            return base.ToString() + "[" + Address + "]";
         }
 
         internal virtual void DfsPathSplit(string path, string[] result)

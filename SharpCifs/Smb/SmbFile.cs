@@ -334,7 +334,7 @@ namespace SharpCifs.Smb
             }
             else
             {
-                trans = SmbTransport.GetSmbTransport(addr, Url.Port);
+                trans = SmbTransport.GetSmbTransport(addr);
                 Tree = trans.GetSmbSession(Auth).GetSmbTree(_share, null);
             }
 
