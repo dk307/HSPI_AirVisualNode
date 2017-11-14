@@ -71,7 +71,6 @@ namespace SharpCifs.Smb
             SmbConstants.Capabilities = Config.GetInt("jcifs.smb.client.capabilities", SmbConstants.DefaultCapabilities);
             SmbConstants.TcpNodelay = Config.GetBoolean("jcifs.smb.client.tcpNoDelay", false);
             SmbConstants.ResponseTimeout = Config.GetInt("jcifs.smb.client.responseTimeout", SmbConstants.DefaultResponseTimeout);
-            SmbConstants.SoTimeout = Config.GetInt("jcifs.smb.client.soTimeout", SmbConstants.DefaultSoTimeout);
             SmbConstants.ConnTimeout = Config.GetInt("jcifs.smb.client.connTimeout", SmbConstants.DefaultConnTimeout);
             SmbConstants.NativeOs = Config.GetProperty("jcifs.smb.client.nativeOs", Runtime.GetProperty("os.name"));
             SmbConstants.NativeLanman = Config.GetProperty("jcifs.smb.client.nativeLanMan", "jCIFS");
@@ -331,9 +330,6 @@ namespace SharpCifs.Smb
 
         public static int ResponseTimeout { get; internal set; }
             = Config.GetInt("jcifs.smb.client.responseTimeout", DefaultResponseTimeout);
-
-        public static int SoTimeout { get; internal set; }
-            = Config.GetInt("jcifs.smb.client.soTimeout", DefaultSoTimeout);
 
         public static int ConnTimeout { get; internal set; }
             = Config.GetInt("jcifs.smb.client.connTimeout", DefaultConnTimeout);

@@ -70,31 +70,31 @@ namespace Hspi.Connector
                 string path = Invariant($"smb://{DeviceIP}/airvisual/{localTime.Year}{localTime.Month}_AirVisual_values.txt");
 
                 var auth = new NtlmPasswordAuthentication(null, credentials.UserName, credentials.Password);
-                var smbFile = new SmbFile(path, auth, SmbFile.FileShareRead | SmbFile.FileShareWrite);
-
-                smbFile.Connect();
-
                 string lastString = null;
-
-                using (Stream fileStream = smbFile.GetInputStream())
+                using (var smbFile = new SmbFile(path, auth, SmbFile.FileShareRead | SmbFile.FileShareWrite))
                 {
-                    var length = fileStream.Length;
-                    logger.LogDebug(Invariant($"Reading from {path} with size {length} Bytes"));
+                    smbFile.Connect();
 
-                    int bufferSize = 16 * 1024;
-                    fileStream.Seek(-Math.Min(bufferSize, length), SeekOrigin.End);
-
-                    var pos = fileStream.Position;
-
-                    using (var reader = new StreamReader(fileStream, Encoding.ASCII, false, bufferSize))
+                    using (Stream fileStream = smbFile.GetInputStream())
                     {
-                        string lastData = await reader.ReadToEndAsync().ConfigureAwait(false);
+                        var length = fileStream.Length;
+                        logger.LogDebug(Invariant($"Reading from {path} with size {length} Bytes"));
 
-                        foreach (var reading in lastData.Split('\n'))
+                        int bufferSize = 16 * 1024;
+                        fileStream.Seek(-Math.Min(bufferSize, length), SeekOrigin.End);
+
+                        var pos = fileStream.Position;
+
+                        using (var reader = new StreamReader(fileStream, Encoding.ASCII, false, bufferSize))
                         {
-                            if (!string.IsNullOrWhiteSpace(reading))
+                            string lastData = await reader.ReadToEndAsync().ConfigureAwait(false);
+
+                            foreach (var reading in lastData.Split('\n'))
                             {
-                                lastString = reading;
+                                if (!string.IsNullOrWhiteSpace(reading))
+                                {
+                                    lastString = reading;
+                                }
                             }
                         }
                     }

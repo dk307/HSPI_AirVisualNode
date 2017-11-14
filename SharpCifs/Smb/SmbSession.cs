@@ -28,18 +28,6 @@ namespace SharpCifs.Smb
         private static readonly string LogonShare
             = Config.GetProperty("jcifs.smb.client.logonShare", null);
 
-        private static readonly int LookupRespLimit
-            = Config.GetInt("jcifs.netbios.lookupRespLimit", 3);
-
-        private static readonly string Domain
-            = Config.GetProperty("jcifs.smb.client.domain", null);
-
-        private static readonly string Username
-            = Config.GetProperty("jcifs.smb.client.username", null);
-
-        private static readonly int CachePolicy
-            = Config.GetInt("jcifs.netbios.cachePolicy", 60 * 10) * 60;
-
         internal int ConnectionState;
 
         internal int Uid;
@@ -55,8 +43,6 @@ namespace SharpCifs.Smb
         internal SmbTransport transport;
 
         internal NtlmPasswordAuthentication Auth;
-
-        internal long Expiration;
 
         internal string NetbiosName;
 
@@ -81,18 +67,9 @@ namespace SharpCifs.Smb
                 SmbTree t;
                 if (share == null)
                 {
-                    share = "IPC$";
+                    throw new NotSupportedException("Null Share");
                 }
-                /*
-                for (IEnumeration e = trees.GetEnumerator(); e.MoveNext(); )
-				{
-					t = (SmbTree)e.Current;
-					if (t.Matches(share, service))
-					{
-						return t;
-					}
-				}
-                */
+
                 foreach (var e in Trees)
                 {
                     t = (SmbTree)e;
@@ -137,7 +114,6 @@ namespace SharpCifs.Smb
                 {
                     response.Received = false;
                 }
-                Expiration = Runtime.CurrentTimeMillis() + SmbConstants.SoTimeout;
                 SessionSetup(request, response);
                 if (response != null && response.Received)
                 {

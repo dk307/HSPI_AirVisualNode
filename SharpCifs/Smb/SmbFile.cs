@@ -23,7 +23,7 @@ using System.Text;
 
 namespace SharpCifs.Smb
 {
-    internal sealed class SmbFile : UrlConnection
+    internal sealed class SmbFile : UrlConnection, IDisposable
     {
         internal const int ORdonly = 0x01;
 
@@ -340,10 +340,6 @@ namespace SharpCifs.Smb
 
             try
             {
-                if (Log.Level >= 3)
-                {
-                    Log.WriteLine("doConnect: " + addr);
-                }
                 Tree.TreeConnect(null, null);
             }
             catch (SmbAuthException sae)
@@ -865,6 +861,12 @@ namespace SharpCifs.Smb
         public InputStream GetInputStream()
         {
             return new SmbFileInputStream(this);
+        }
+
+        public void Dispose()
+        {
+            Close();
+            Tree?.Session?.Logoff(false);
         }
     }
 }

@@ -117,13 +117,11 @@ namespace SharpCifs.Smb
 
         internal SmbComBlankResponse Key = new SmbComBlankResponse();
 
-        internal long SessionExpiration = Runtime.CurrentTimeMillis() + SmbConstants.SoTimeout;
-
         internal List<object> Referrals = new List<object>();
 
         internal SigningDigest Digest;
 
-        internal List<SmbSession> Sessions = new List<SmbSession>();
+        internal SmbSession Session;
 
         internal ServerData Server;
 
@@ -166,28 +164,18 @@ namespace SharpCifs.Smb
             lock (this)
             {
                 SmbSession ssn;
-                long now;
 
-                ssn = Sessions.FirstOrDefault(s => s.Matches(auth));
+                ssn = Session;
                 if (ssn != null)
                 {
                     ssn.Auth = auth;
                     return ssn;
                 }
 
-                if (SmbConstants.SoTimeout > 0
-                    && SessionExpiration < (now = Runtime.CurrentTimeMillis()))
-                {
-                    SessionExpiration = now + SmbConstants.SoTimeout;
-
-                    foreach (var session in Sessions.Where(s => s.Expiration < now))
-                    {
-                        session.Logoff(false);
-                    }
-                }
+                Session?.Logoff(false);
                 ssn = new SmbSession(Address, LocalAddr, LocalPort, auth);
                 ssn.transport = this;
-                Sessions.Add(ssn);
+                Session = ssn;
                 return ssn;
             }
         }
@@ -251,7 +239,7 @@ namespace SharpCifs.Smb
                                               port), // <- 445
                                SmbConstants.ConnTimeout);
 
-                Socket.SoTimeOut = SmbConstants.SoTimeout;
+                Socket.SoTimeOut = SmbConstants.DefaultSoTimeout;
                 Out = Socket.GetOutputStream();
                 In = Socket.GetInputStream();
                 if (++Mid == 32000)
@@ -368,9 +356,7 @@ namespace SharpCifs.Smb
         {
             try
             {
-                if (Sessions != null)
-                    foreach (var ssn in Sessions)
-                        ssn?.Logoff(hard);
+                Session?.Logoff(hard);
 
                 Out?.Close();
                 In?.Close();
