@@ -91,7 +91,7 @@ namespace SharpCifs.Util.Sharpen
 
                         if (args.SocketError != SocketError.Success)
                         {
-                            throw new ConnectException("Can't connect to end point.");
+                            throw new ConnectException(FormattableString.Invariant($"Can't connect to end point with Error {args.SocketError}."));
                         }
                     }
                     else

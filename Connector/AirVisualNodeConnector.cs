@@ -67,7 +67,7 @@ namespace Hspi.Connector
                 logger.LogDebug(Invariant($"Connecting to {DeviceIP}"));
 
                 DateTime localTime = DateTime.Now.ToLocalTime();
-                string path = Invariant($"smb://{DeviceIP}/airvisual/{localTime.Year}{localTime.Month}_AirVisual_values.txt");
+                string path = Invariant($"smb://{DeviceIP}/airvisual/{localTime.Year}{localTime.Month:00}_AirVisual_values.txt");
 
                 var auth = new NtlmPasswordAuthentication(null, credentials.UserName, credentials.Password);
                 string lastString = null;
