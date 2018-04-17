@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{6AFED710-7BB6-40E3-B4CD-4642DA950411}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Hspi</RootNamespace>
     <AssemblyName>HSPI_AirVisualNode</AssemblyName>
@@ -102,10 +102,11 @@
   <ItemGroup>
     <Compile Include="AirVisualNode.cs" />
     <Compile Include="AirVisualNodeConnectorManager.cs" />
+    <Compile Include="HSTraceListener.cs" />
+    <Compile Include="ILogger.cs" />
     <Compile Include="SharpCifs\Config.cs" />
     <Compile Include="ConfigPage.cs" />
     <Compile Include="Connector\AirVisualNodeConnector.cs" />
-    <Compile Include="Connector\ILogger.cs" />
     <Compile Include="SensorData.cs" />
     <Compile Include="DeviceData\DeviceData.cs" />
     <Compile Include="DeviceData\DeviceDataBase.cs" />

@@ -24,8 +24,7 @@ namespace Hspi.Connector
 
             combinedCancellationSource = CancellationTokenSource.CreateLinkedTokenSource(shutdownToken, instanceCancellationSource.Token);
             connector = new AirVisualNodeConnector(Device.DeviceIP,
-                                                           new NetworkCredential(Device.Username, Device.Password),
-                                                           logger);
+                                                   new NetworkCredential(Device.Username, Device.Password));
             connector.SensorDataChanged += SensorDataChanged;
 
             connector.Connect(Token);

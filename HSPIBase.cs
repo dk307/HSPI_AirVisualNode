@@ -2,12 +2,12 @@
 using HSCF.Communication.Scs.Communication;
 using HSCF.Communication.Scs.Communication.EndPoints.Tcp;
 using HSCF.Communication.ScsServices.Client;
-using Hspi.Connector;
 using Hspi.Exceptions;
 using NullGuard;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 
@@ -73,6 +73,7 @@ namespace Hspi
         [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "apiVersion")]
         public void Connect(string serverAddress, int serverPort)
         {
+            Trace.WriteLine(Invariant($"Connecting to {serverAddress}"));
             try
             {
                 HsClient = ScsServiceClientBuilder.CreateClient<IHSApplication>(new ScsTcpEndPoint(serverAddress, serverPort), this);
@@ -80,10 +81,13 @@ namespace Hspi
                 HS = HsClient.ServiceProxy;
 
                 var apiVersion = HS.APIVersion; // just to make sure our connection is valid
+
+                hsTraceListener = new HSTraceListener(this as ILogger);
+                Debug.Listeners.Add(hsTraceListener);
             }
             catch (Exception ex)
             {
-                throw new HspiConnectionException(Invariant($"Error connecting homeseer SCS client: {ex.Message}"), ex);
+                throw new HspiConnectionException(Invariant($"Error connecting homeseer SCS client: {ex.GetFullMessage()}"), ex);
             }
 
             try
@@ -96,7 +100,7 @@ namespace Hspi
             }
             catch (Exception ex)
             {
-                throw new HspiConnectionException(Invariant($"Error connecting callback SCS client: {ex.Message}"), ex);
+                throw new HspiConnectionException(Invariant($"Error connecting callback SCS client: {ex.GetFullMessage()}"), ex);
             }
 
             // Establish the reverse connection from homeseer back to our plugin
@@ -106,24 +110,27 @@ namespace Hspi
             }
             catch (Exception ex)
             {
-                throw new HspiConnectionException(Invariant($"Error connecting homeseer to our plugin: {ex.Message}"), ex);
+                throw new HspiConnectionException(Invariant($"Error connecting homeseer to our plugin: {ex.GetFullMessage()}"), ex);
             }
 
             HsClient.Disconnected += HsClient_Disconnected;
+            Trace.WriteLine(Invariant($"Connected to {serverAddress}"));
         }
 
         private void HsClient_Disconnected(object sender, EventArgs e)
         {
-            cancellationTokenSource.Cancel();
+            Trace.WriteLine(Invariant($"Disconnected from HS3"));
+            DisconnectHspiConnection();
         }
 
         public void WaitforShutDownOrDisconnect()
         {
-            cancellationTokenSource.Token.WaitHandle.WaitOne();
+            this.shutdownWaitEvent.WaitOne();
         }
 
         public void Dispose()
         {
+            DisconnectHspiConnection();
             Dispose(true);
         }
 
@@ -201,15 +208,7 @@ namespace Hspi
 
         public override void ShutdownIO()
         {
-            cancellationTokenSource.Cancel();
-
-            if (HsClient != null)
-            {
-                HsClient.Disconnected -= HsClient_Disconnected;
-            }
-
-            this.HsClient.Disconnect();
-            this.CallbackClient.Disconnect();
+            DisconnectHspiConnection();
         }
 
         public override void SpeakIn(int deviceId, [AllowNull]string text, bool wait, [AllowNull]string host)
@@ -253,8 +252,10 @@ namespace Hspi
                         HsClient.Disconnected -= HsClient_Disconnected;
                         HsClient.Dispose();
                     }
+                    hsTraceListener?.Dispose();
                     CallbackClient?.Dispose();
                     cancellationTokenSource.Dispose();
+                    shutdownWaitEvent.Dispose();
                 }
                 disposedValue = true;
             }
@@ -268,26 +269,61 @@ namespace Hspi
 
         public virtual void LogDebug(string message)
         {
-            HS.WriteLog(Name, Invariant($"Debug:{message}"));
+            HS?.WriteLog(Name, Invariant($"Debug:{message}"));
         }
 
         public void LogError(string message)
         {
-            HS.WriteLogEx(Name, Invariant($"Error:{message}"), "#FF0000");
+            HS?.WriteLogEx(Name, Invariant($"Error:{message}"), "#FF0000");
         }
 
         public void LogInfo(string message)
         {
-            HS.WriteLog(Name, message);
+            HS?.WriteLog(Name, message);
         }
 
         public void LogWarning(string message)
         {
-            HS.WriteLogEx(Name, Invariant($"Warning:{message}"), "#D58000");
+            HS?.WriteLogEx(Name, Invariant($"Warning:{message}"), "#D58000");
         }
 
+        private void DisconnectHspiConnection()
+        {
+            Trace.WriteLine("Disconnecting Hspi Connection");
+            cancellationTokenSource.Cancel();
+
+            if (HsClient != null)
+            {
+                HsClient.Disconnected -= HsClient_Disconnected;
+            }
+
+            if (hsTraceListener != null)
+            {
+                Debug.Listeners.Remove(hsTraceListener);
+            }
+
+            if ((this.CallbackClient != null) &&
+                (this.CallbackClient.CommunicationState == CommunicationStates.Connected))
+            {
+                this.CallbackClient.Disconnect();
+                this.CallbackClient = null;
+            }
+
+            if ((this.HsClient != null) &&
+                (this.HsClient.CommunicationState == CommunicationStates.Connected))
+            {
+                this.HsClient.Disconnect();
+                this.HsClient = null;
+            }
+
+            this.shutdownWaitEvent.Set();
+            Trace.WriteLine("Disconnected Hspi Connection");
+        }
+
+        private HSTraceListener hsTraceListener;
         private readonly int accessLevel;
         private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        private readonly EventWaitHandle shutdownWaitEvent = new EventWaitHandle(false, EventResetMode.ManualReset);
         private readonly int capabilities;
         private readonly bool hsComPort;
         private readonly string instanceFriendlyName;

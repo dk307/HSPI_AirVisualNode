@@ -10,13 +10,13 @@ using SharpCifs.Smb;
 
 namespace Hspi.Connector
 {
+    using System.Diagnostics;
     using static System.FormattableString;
 
     internal class AirVisualNodeConnector : IDisposable
     {
-        public AirVisualNodeConnector(IPAddress deviceIP, NetworkCredential credentials, ILogger logger)
+        public AirVisualNodeConnector(IPAddress deviceIP, NetworkCredential credentials)
         {
-            this.logger = logger;
             DeviceIP = deviceIP;
             this.credentials = credentials;
         }
@@ -64,7 +64,7 @@ namespace Hspi.Connector
         {
             try
             {
-                logger.LogDebug(Invariant($"Connecting to {DeviceIP}"));
+                Trace.WriteLine(Invariant($"Connecting to {DeviceIP}"));
 
                 DateTime localTime = DateTime.Now.ToLocalTime();
                 string path = Invariant($"smb://{DeviceIP}/airvisual/{localTime.Year}{localTime.Month:00}_AirVisual_values.txt");
@@ -78,7 +78,7 @@ namespace Hspi.Connector
                     using (Stream fileStream = smbFile.GetInputStream())
                     {
                         var length = fileStream.Length;
-                        logger.LogDebug(Invariant($"Reading from {path} with size {length} Bytes"));
+                        Trace.WriteLine(Invariant($"Reading from {path} with size {length} Bytes"));
 
                         int bufferSize = 512;
                         fileStream.Seek(-Math.Min(bufferSize, length), SeekOrigin.End);
@@ -105,7 +105,7 @@ namespace Hspi.Connector
                     throw new IOException("Last String Read From file is empty");
                 }
 
-                logger.LogDebug(Invariant($"Found data {lastString} from {path}"));
+                Trace.WriteLine(Invariant($"Found data {lastString} from {path}"));
 
                 var tokens = lastString.Split(';');
 
@@ -129,12 +129,12 @@ namespace Hspi.Connector
 
                     UpdateDelta(sensorData);
                     lastUpdate = sensorData.updateTime;
-                    logger.LogInfo(Invariant($"Updated data for device {DeviceIP} for time {sensorData.updateTime}"));
+                    Trace.TraceInformation(Invariant($"Updated data for device {DeviceIP} for time {sensorData.updateTime}"));
                 }
             }
             catch (Exception ex)
             {
-                logger.LogWarning(Invariant($"Failed to  get data from {DeviceIP}. {ex.GetFullMessage()}."));
+                Trace.TraceError(Invariant($"Failed to  get data from {DeviceIP}. {ex.GetFullMessage()}."));
             }
         }
 
@@ -153,7 +153,6 @@ namespace Hspi.Connector
         }
 
         private readonly NetworkCredential credentials;
-        private readonly ILogger logger;
         private bool disposedValue = false;
         private DateTime lastUpdate;
     }

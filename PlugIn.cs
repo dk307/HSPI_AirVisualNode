@@ -101,7 +101,7 @@ namespace Hspi
 
         public override void LogDebug(string message)
         {
-            if (pluginConfig.DebugLogging)
+            if ((pluginConfig != null) && (pluginConfig.DebugLogging))
             {
                 base.LogDebug(message);
             }
