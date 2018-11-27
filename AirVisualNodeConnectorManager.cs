@@ -1,66 +1,55 @@
 ﻿using HomeSeerAPI;
 using Hspi.Connector.Model;
 using Hspi.DeviceData;
+using Nito.AsyncEx;
+using Nito.AsyncEx.Synchronous;
 using NullGuard;
 using System;
-using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Hspi.Connector
 {
+    using System.Diagnostics;
     using System.Net;
     using static System.FormattableString;
 
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    internal class AirVisualNodeConnectorManager : IDisposable
+    internal sealed class AirVisualNodeConnectorManager : IDisposable
     {
-        public AirVisualNodeConnectorManager(IHSApplication HS, AirVisualNode device, ILogger logger, CancellationToken shutdownToken)
+        public AirVisualNodeConnectorManager(IHSApplication HS, AirVisualNode device, CancellationToken shutdownToken)
         {
             this.HS = HS;
-            this.logger = logger;
             this.Device = device;
-            rootDeviceData = new DeviceRootDeviceManager(device.Name, device.Id, this.HS, logger);
+            rootDeviceData = new DeviceRootDeviceManager(device.Name, device.Id, this.HS);
 
-            combinedCancellationSource = CancellationTokenSource.CreateLinkedTokenSource(shutdownToken, instanceCancellationSource.Token);
+            combinedCancellationSource = CancellationTokenSource.CreateLinkedTokenSource(shutdownToken);
             connector = new AirVisualNodeConnector(Device.DeviceIP,
-                                                   new NetworkCredential(Device.Username, Device.Password));
+                                                   new NetworkCredential(Device.Username, Device.Password),
+                                                   combinedCancellationSource.Token);
             connector.SensorDataChanged += SensorDataChanged;
 
-            connector.Connect(Token);
-            processTask = Task.Factory.StartNew(ProcessDeviceUpdates, Token, TaskCreationOptions.LongRunning, TaskScheduler.Current).Unwrap();
+            connector.Connect();
+            processTask = Task.Factory.StartNew(ProcessDeviceUpdates,
+                                                Token,
+                                                TaskCreationOptions.LongRunning,
+                                                TaskScheduler.Current).WaitAndUnwrapException();
         }
 
         public AirVisualNode Device { get; }
 
         private CancellationToken Token => combinedCancellationSource.Token;
 
-        public void Cancel()
-        {
-            instanceCancellationSource.Cancel();
-            processTask.Wait();
-        }
-
         public void Dispose()
-        {
-            Dispose(true);
-        }
-
-        protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
             {
-                if (disposing)
-                {
-                    instanceCancellationSource.Cancel();
-                    instanceCancellationSource.Dispose();
-                    combinedCancellationSource.Dispose();
+                combinedCancellationSource.Cancel();
 
-                    processTask.Dispose();
-                    changedSensorData.Dispose();
-                    DisposeConnector();
-                    rootDeviceDataLock.Dispose();
-                }
+                processTask.WaitWithoutException();
+
+                DisposeConnector();
+                combinedCancellationSource.Dispose();
 
                 disposedValue = true;
             }
@@ -81,20 +70,16 @@ namespace Hspi.Connector
             {
                 while (!Token.IsCancellationRequested)
                 {
-                    if (changedSensorData.TryTake(out var sensorData, -1, Token))
+                    var sensorData = await changedSensorData.DequeueAsync(Token).ConfigureAwait(false);
+                    using (var sync = await rootDeviceDataLock.LockAsync(Token).ConfigureAwait(false))
                     {
-                        await rootDeviceDataLock.WaitAsync(Token);
                         try
                         {
                             rootDeviceData.ProcessSensorData(Device, sensorData);
                         }
                         catch (Exception ex)
                         {
-                            logger.LogWarning(Invariant($"Failed to update Sensor Data for {Device.DeviceIP} with {ex.Message}"));
-                        }
-                        finally
-                        {
-                            rootDeviceDataLock.Release();
+                            Trace.TraceWarning(Invariant($"Failed to update Sensor Data for {Device.DeviceIP} with {ex.Message}"));
                         }
                     }
                 }
@@ -107,22 +92,20 @@ namespace Hspi.Connector
         {
             try
             {
-                changedSensorData.Add(data, Token);
+                changedSensorData.Enqueue(data, Token);
             }
             catch (OperationCanceledException)
             {
             }
         }
 
-        private readonly BlockingCollection<SensorData> changedSensorData = new BlockingCollection<SensorData>();
+        private readonly AsyncProducerConsumerQueue<SensorData> changedSensorData = new AsyncProducerConsumerQueue<SensorData>();
         private readonly CancellationTokenSource combinedCancellationSource;
         private readonly AirVisualNodeConnector connector;
         private readonly IHSApplication HS;
-        private readonly CancellationTokenSource instanceCancellationSource = new CancellationTokenSource();
-        private readonly ILogger logger;
         private readonly Task processTask;
         private readonly DeviceRootDeviceManager rootDeviceData;
-        private readonly SemaphoreSlim rootDeviceDataLock = new SemaphoreSlim(1);
+        private readonly AsyncLock rootDeviceDataLock = new AsyncLock();
         private bool disposedValue = false; // To detect redundant calls
     }
 }

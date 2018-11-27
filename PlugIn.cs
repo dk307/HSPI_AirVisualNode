@@ -37,7 +37,7 @@ namespace Hspi
 
                 RegisterConfigPage();
 
-                RestartMPowerConnections();
+                RestartConnections();
 
                 LogInfo("Plugin Started");
             }
@@ -50,7 +50,7 @@ namespace Hspi
             return result;
         }
 
-        private void RestartMPowerConnections()
+        private void RestartConnections()
         {
             lock (connectorManagerLock)
             {
@@ -64,14 +64,13 @@ namespace Hspi
                     {
                         if (!device.Value.Equals(oldConnector.Device))
                         {
-                            oldConnector.Cancel();
                             oldConnector.Dispose();
-                            connectorManager[device.Key] = new AirVisualNodeConnectorManager(HS, device.Value, this as ILogger, ShutdownCancellationToken);
+                            connectorManager[device.Key] = new AirVisualNodeConnectorManager(HS, device.Value, ShutdownCancellationToken);
                         }
                     }
                     else
                     {
-                        connectorManager.Add(device.Key, new AirVisualNodeConnectorManager(HS, device.Value, this as ILogger, ShutdownCancellationToken));
+                        connectorManager.Add(device.Key, new AirVisualNodeConnectorManager(HS, device.Value, ShutdownCancellationToken));
                     }
                 }
 
@@ -81,7 +80,6 @@ namespace Hspi
                 {
                     if (!currentDevices.ContainsKey(deviceKeyPair.Key))
                     {
-                        deviceKeyPair.Value.Cancel();
                         deviceKeyPair.Value.Dispose();
                         removalList.Add(deviceKeyPair.Key);
                     }
@@ -96,7 +94,7 @@ namespace Hspi
 
         private void PluginConfig_ConfigChanged(object sender, EventArgs e)
         {
-            RestartMPowerConnections();
+            RestartConnections();
         }
 
         public override void LogDebug(string message)
@@ -152,7 +150,7 @@ namespace Hspi
                         stb.Append(Invariant($"<tr><td class='tablecell'>Type:</td><td class='tablecell' colspan=2>{EnumHelper.GetDescription(deviceIdentifier.DeviceType)}</td></tr>"));
                         stb.Append(Invariant($"</td><td></td></tr>"));
                         stb.Append("<tr height='5'><td colspan=3></td></tr>");
-                        stb.Append(@" </table>");
+                        stb.Append(@"</table>");
 
                         return stb.ToString();
                     }
@@ -162,7 +160,7 @@ namespace Hspi
             }
             catch (Exception ex)
             {
-                LogError(Invariant($"ConfigDevice for {deviceId} With {ex.Message}"));
+                LogError(Invariant($"ConfigDevice for {deviceId} With {ExceptionHelper.GetFullMessage(ex)}"));
                 return string.Empty;
             }
         }
@@ -205,13 +203,15 @@ namespace Hspi
                     pluginConfig.Dispose();
                 }
 
-                foreach (var deviceKeyPair in connectorManager)
+                lock (connectorManagerLock)
                 {
-                    deviceKeyPair.Value.Cancel();
-                    deviceKeyPair.Value.Dispose();
-                }
+                    foreach (var deviceKeyPair in connectorManager)
+                    {
+                        deviceKeyPair.Value.Dispose();
+                    }
 
-                connectorManager.Clear();
+                    connectorManager.Clear();
+                }
 
                 disposedValue = true;
             }

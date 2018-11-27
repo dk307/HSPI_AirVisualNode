@@ -7,45 +7,43 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using SharpCifs.Smb;
+using System.Diagnostics;
+using static System.FormattableString;
+using Nito.AsyncEx;
+using Nito.AsyncEx.Synchronous;
 
 namespace Hspi.Connector
 {
-    using System.Diagnostics;
-    using static System.FormattableString;
-
-    internal class AirVisualNodeConnector : IDisposable
+    internal sealed class AirVisualNodeConnector : IDisposable
     {
-        public AirVisualNodeConnector(IPAddress deviceIP, NetworkCredential credentials)
+        public AirVisualNodeConnector(IPAddress deviceIP,
+                                      NetworkCredential credentials,
+                                      CancellationToken token)
         {
             DeviceIP = deviceIP;
             this.credentials = credentials;
+            this.sourceShutdownToken = CancellationTokenSource.CreateLinkedTokenSource(token);
         }
 
         public event EventHandler<SensorData> SensorDataChanged;
 
         public IPAddress DeviceIP { get; }
 
-        public void Connect(CancellationToken token)
+        public void Connect()
         {
-            Task.Factory.StartNew(async () => await StartWorking(token), token,
+            workTask = Task.Factory.StartNew(StartWorking,
+                                        sourceShutdownToken.Token,
                                        TaskCreationOptions.LongRunning,
-                                       TaskScheduler.Current).Unwrap();
+                                       TaskScheduler.Current).WaitAndUnwrapException(sourceShutdownToken.Token);
         }
 
-        // This code added to correctly implement the disposable pattern.
         public void Dispose()
-        {
-            Dispose(true);
-        }
-
-        protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
             {
-                if (disposing)
-                {
-                }
-
+                sourceShutdownToken.Cancel();
+                workTask?.WaitWithoutException();
+                sourceShutdownToken.Dispose();
                 disposedValue = true;
             }
         }
@@ -138,12 +136,12 @@ namespace Hspi.Connector
             }
         }
 
-        private async Task StartWorking(CancellationToken token)
+        private async Task StartWorking()
         {
-            while (!token.IsCancellationRequested)
+            while (!sourceShutdownToken.Token.IsCancellationRequested)
             {
                 await GetData().ConfigureAwait(false);
-                await Task.Delay(10000, token).ConfigureAwait(false);
+                await Task.Delay(10000, sourceShutdownToken.Token).ConfigureAwait(false);
             }
         }
 
@@ -153,7 +151,9 @@ namespace Hspi.Connector
         }
 
         private readonly NetworkCredential credentials;
+        private readonly CancellationTokenSource sourceShutdownToken;
         private bool disposedValue = false;
         private DateTime lastUpdate;
+        private Task workTask;
     }
 }

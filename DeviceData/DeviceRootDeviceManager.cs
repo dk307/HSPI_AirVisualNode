@@ -14,10 +14,9 @@ namespace Hspi.DeviceData
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     internal class DeviceRootDeviceManager
     {
-        public DeviceRootDeviceManager(string deviceName, string rootDeviceId, IHSApplication HS, ILogger logger)
+        public DeviceRootDeviceManager(string deviceName, string rootDeviceId, IHSApplication HS)
         {
             this.deviceName = deviceName;
-            this.logger = logger;
             this.HS = HS;
             this.rootDeviceId = rootDeviceId;
             GetCurrentDevices();
