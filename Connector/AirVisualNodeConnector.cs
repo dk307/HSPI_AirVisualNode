@@ -11,6 +11,7 @@ using System.Diagnostics;
 using static System.FormattableString;
 using Nito.AsyncEx;
 using Nito.AsyncEx.Synchronous;
+using Hspi.Utils;
 
 namespace Hspi.Connector
 {
@@ -31,10 +32,7 @@ namespace Hspi.Connector
 
         public void Connect()
         {
-            workTask = Task.Factory.StartNew(StartWorking,
-                                        sourceShutdownToken.Token,
-                                       TaskCreationOptions.LongRunning,
-                                       TaskScheduler.Current).WaitAndUnwrapException(sourceShutdownToken.Token);
+            TaskHelper.StartAsync(StartWorking, sourceShutdownToken.Token);
         }
 
         public void Dispose()
@@ -42,7 +40,6 @@ namespace Hspi.Connector
             if (!disposedValue)
             {
                 sourceShutdownToken.Cancel();
-                workTask?.WaitWithoutException();
                 sourceShutdownToken.Dispose();
                 disposedValue = true;
             }
@@ -154,6 +151,5 @@ namespace Hspi.Connector
         private readonly CancellationTokenSource sourceShutdownToken;
         private bool disposedValue = false;
         private DateTime lastUpdate;
-        private Task workTask;
     }
 }

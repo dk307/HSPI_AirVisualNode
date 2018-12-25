@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Hspi.Connector
 {
+    using Hspi.Utils;
     using System.Diagnostics;
     using System.Net;
     using static System.FormattableString;
@@ -30,10 +31,7 @@ namespace Hspi.Connector
             connector.SensorDataChanged += SensorDataChanged;
 
             connector.Connect();
-            processTask = Task.Factory.StartNew(ProcessDeviceUpdates,
-                                                Token,
-                                                TaskCreationOptions.LongRunning,
-                                                TaskScheduler.Current).WaitAndUnwrapException();
+            TaskHelper.StartAsync(ProcessDeviceUpdates, Token);
         }
 
         public AirVisualNode Device { get; }
@@ -45,8 +43,6 @@ namespace Hspi.Connector
             if (!disposedValue)
             {
                 combinedCancellationSource.Cancel();
-
-                processTask.WaitWithoutException();
 
                 DisposeConnector();
                 combinedCancellationSource.Dispose();
@@ -103,7 +99,6 @@ namespace Hspi.Connector
         private readonly CancellationTokenSource combinedCancellationSource;
         private readonly AirVisualNodeConnector connector;
         private readonly IHSApplication HS;
-        private readonly Task processTask;
         private readonly DeviceRootDeviceManager rootDeviceData;
         private readonly AsyncLock rootDeviceDataLock = new AsyncLock();
         private bool disposedValue = false; // To detect redundant calls

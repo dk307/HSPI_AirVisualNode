@@ -262,6 +262,7 @@
     <Compile Include="SharpCifs\Util\Transport\Response.cs" />
     <Compile Include="SharpCifs\Util\Transport\Transport.cs" />
     <Compile Include="SharpCifs\Util\Transport\TransportException.cs" />
+    <Compile Include="Utils\TaskHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
