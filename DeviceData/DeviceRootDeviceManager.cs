@@ -1,16 +1,15 @@
 ﻿using HomeSeerAPI;
-using Hspi.Connector;
 using Hspi.Connector.Model;
 using Hspi.Exceptions;
 using NullGuard;
 using Scheduler.Classes;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using static System.FormattableString;
 
 namespace Hspi.DeviceData
 {
-    using static System.FormattableString;
-
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
     internal class DeviceRootDeviceManager
     {
@@ -132,7 +131,7 @@ namespace Hspi.DeviceData
         /// </returns>
         private DeviceClass CreateDevice(int? optionalParentRefId, string name, string deviceAddress, DeviceDataBase deviceData)
         {
-            logger.LogDebug(Invariant($"Creating Device with Address:{deviceAddress}"));
+            Trace.TraceInformation(Invariant($"Creating Device with Address:{deviceAddress}"));
 
             DeviceClass device = null;
             int refId = HS.NewDeviceRef(name);
@@ -142,9 +141,11 @@ namespace Hspi.DeviceData
                 string address = deviceAddress;
                 device.set_Address(HS, address);
                 device.set_Device_Type_String(HS, deviceData.HSDeviceTypeString);
-                var deviceType = new DeviceTypeInfo_m.DeviceTypeInfo();
-                deviceType.Device_API = deviceData.DeviceAPI;
-                deviceType.Device_Type = deviceData.HSDeviceType;
+                var deviceType = new DeviceTypeInfo_m.DeviceTypeInfo
+                {
+                    Device_API = deviceData.DeviceAPI,
+                    Device_Type = deviceData.HSDeviceType
+                };
 
                 device.set_DeviceType_Set(HS, deviceType);
                 device.set_Interface(HS, PluginData.PlugInName);
@@ -195,6 +196,5 @@ namespace Hspi.DeviceData
         private readonly IHSApplication HS;
         private int? parentRefId = null;
         private readonly IDictionary<string, DeviceData> currentChildDevices = new Dictionary<string, DeviceData>();
-        private readonly ILogger logger;
     };
 }
