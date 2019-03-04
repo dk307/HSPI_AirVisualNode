@@ -10,14 +10,14 @@ namespace Hspi.Utils
     {
         public static void StartAsyncWithErrorChecking(string taskName, Func<Task> taskAction, CancellationToken token)
         {
-            var task = Task.Factory.StartNew(() => RunInLoop(taskName, taskAction), token,
+            var task = Task.Factory.StartNew(() => RunInLoop(taskName, taskAction, token), token,
                                          TaskCreationOptions.LongRunning | TaskCreationOptions.DenyChildAttach,
                                          TaskScheduler.Current);
         }
 
-        private static async Task RunInLoop(string taskName, Func<Task> taskAction)
+        private static async Task RunInLoop(string taskName, Func<Task> taskAction, CancellationToken token)
         {
-            while (true)
+            while (!token.IsCancellationRequested)
             {
                 try
                 {
