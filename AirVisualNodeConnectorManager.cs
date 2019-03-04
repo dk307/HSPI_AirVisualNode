@@ -30,7 +30,7 @@ namespace Hspi.Connector
             connector.SensorDataChanged += SensorDataChanged;
 
             connector.Connect();
-            TaskHelper.StartAsyncWithErrorChecking("Updates Updates", ProcessDeviceUpdates, Token);
+            TaskHelper.StartAsyncWithErrorChecking("Node Updates", ProcessDeviceUpdates, Token);
         }
 
         public AirVisualNode Device { get; }
