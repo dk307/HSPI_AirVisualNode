@@ -8,6 +8,7 @@ using System.Text;
 
 namespace Hspi
 {
+    using Hspi.Utils;
     using static System.FormattableString;
 
     /// <summary>

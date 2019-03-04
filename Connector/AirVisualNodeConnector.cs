@@ -1,17 +1,15 @@
 ﻿using Hspi.Connector.Model;
+using Hspi.Utils;
+using SharpCifs.Smb;
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using SharpCifs.Smb;
-using System.Diagnostics;
 using static System.FormattableString;
-using Nito.AsyncEx;
-using Nito.AsyncEx.Synchronous;
-using Hspi.Utils;
 
 namespace Hspi.Connector
 {
@@ -23,7 +21,7 @@ namespace Hspi.Connector
         {
             DeviceIP = deviceIP;
             this.credentials = credentials;
-            this.sourceShutdownToken = CancellationTokenSource.CreateLinkedTokenSource(token);
+            sourceShutdownToken = CancellationTokenSource.CreateLinkedTokenSource(token);
         }
 
         public event EventHandler<SensorData> SensorDataChanged;
@@ -32,7 +30,9 @@ namespace Hspi.Connector
 
         public void Connect()
         {
-            TaskHelper.StartAsync(StartWorking, sourceShutdownToken.Token);
+            TaskHelper.StartAsyncWithErrorChecking(Invariant($"{DeviceIP} Connection"),
+                                                   StartWorking,
+                                                   sourceShutdownToken.Token);
         }
 
         public void Dispose()
@@ -104,10 +104,11 @@ namespace Hspi.Connector
 
                 var tokens = lastString.Split(';');
 
-                SensorData sensorData = new SensorData();
-
-                //Date;Time;Timestamp;PM2_5(ug/m3);AQI(US);AQI(CN);PM10(ug/m3);Outdoor AQI(US);Outdoor AQI(CN);Temperature(C);Temperature(F);Humidity(%RH);CO2(ppm);VOC(ppb)
-                sensorData.updateTime = new DateTime(DateTimeOffset.FromUnixTimeSeconds(ParseLong(tokens, 2)).Ticks);
+                SensorData sensorData = new SensorData
+                {
+                    //Date;Time;Timestamp;PM2_5(ug/m3);AQI(US);AQI(CN);PM10(ug/m3);Outdoor AQI(US);Outdoor AQI(CN);Temperature(C);Temperature(F);Humidity(%RH);CO2(ppm);VOC(ppb)
+                    updateTime = new DateTime(DateTimeOffset.FromUnixTimeSeconds(ParseLong(tokens, 2)).Ticks)
+                };
 
                 if (lastUpdate != sensorData.updateTime)
                 {

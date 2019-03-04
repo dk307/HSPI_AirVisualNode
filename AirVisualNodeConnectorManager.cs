@@ -2,7 +2,6 @@
 using Hspi.Connector.Model;
 using Hspi.DeviceData;
 using Nito.AsyncEx;
-using Nito.AsyncEx.Synchronous;
 using NullGuard;
 using System;
 using System.Threading;
@@ -21,7 +20,7 @@ namespace Hspi.Connector
         public AirVisualNodeConnectorManager(IHSApplication HS, AirVisualNode device, CancellationToken shutdownToken)
         {
             this.HS = HS;
-            this.Device = device;
+            Device = device;
             rootDeviceData = new DeviceRootDeviceManager(device.Name, device.Id, this.HS);
 
             combinedCancellationSource = CancellationTokenSource.CreateLinkedTokenSource(shutdownToken);
@@ -31,7 +30,7 @@ namespace Hspi.Connector
             connector.SensorDataChanged += SensorDataChanged;
 
             connector.Connect();
-            TaskHelper.StartAsync(ProcessDeviceUpdates, Token);
+            TaskHelper.StartAsyncWithErrorChecking("Updates Updates", ProcessDeviceUpdates, Token);
         }
 
         public AirVisualNode Device { get; }

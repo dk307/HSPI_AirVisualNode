@@ -130,7 +130,7 @@
     <Compile Include="DeviceData\NumberDeviceData.cs" />
     <Compile Include="DeviceData\RootDeviceData.cs" />
     <Compile Include="DeviceType.cs" />
-    <Compile Include="ExceptionHelper.cs" />
+    <Compile Include="Utils\ExceptionHelper.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="EnumHelper.cs" />
     <Compile Include="HSPI.cs" />
