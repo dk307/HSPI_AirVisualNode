@@ -38,7 +38,10 @@ namespace Hspi
                     continue;
                 }
                 string ipAddressString = GetValue(IPAddressKey, string.Empty, deviceId);
-                IPAddress.TryParse(ipAddressString, out var deviceIP);
+                if (!IPAddress.TryParse(ipAddressString, out var deviceIP))
+                {
+                    deviceIP = IPAddress.None;
+                }
 
                 string name = GetValue(NameKey, string.Empty, deviceId);
                 string username = GetValue(UserNameKey, string.Empty, deviceId);

@@ -66,30 +66,28 @@ namespace Hspi.Connector
 
                 var auth = new NtlmPasswordAuthentication(null, credentials.UserName, credentials.Password);
                 string lastString = null;
-                using (var smbFile = new SmbFile(path, auth, SmbFile.FileShareRead | SmbFile.FileShareWrite))
+                var smbFile = new SmbFile(path, auth, SmbFile.FileShareRead | SmbFile.FileShareWrite);
+                smbFile.Connect();
+
+                using (Stream fileStream = smbFile.GetInputStream())
                 {
-                    smbFile.Connect();
+                    var length = fileStream.Length;
+                    Trace.WriteLine(Invariant($"Reading from {path} with size {length} Bytes"));
 
-                    using (Stream fileStream = smbFile.GetInputStream())
+                    int bufferSize = 512;
+                    fileStream.Seek(-Math.Min(bufferSize, length), SeekOrigin.End);
+
+                    var pos = fileStream.Position;
+
+                    using (var reader = new StreamReader(fileStream, Encoding.ASCII, false, bufferSize))
                     {
-                        var length = fileStream.Length;
-                        Trace.WriteLine(Invariant($"Reading from {path} with size {length} Bytes"));
+                        string lastData = await reader.ReadToEndAsync().ConfigureAwait(false);
 
-                        int bufferSize = 512;
-                        fileStream.Seek(-Math.Min(bufferSize, length), SeekOrigin.End);
-
-                        var pos = fileStream.Position;
-
-                        using (var reader = new StreamReader(fileStream, Encoding.ASCII, false, bufferSize))
+                        foreach (var reading in lastData.Split('\n'))
                         {
-                            string lastData = await reader.ReadToEndAsync().ConfigureAwait(false);
-
-                            foreach (var reading in lastData.Split('\n'))
+                            if (!string.IsNullOrWhiteSpace(reading))
                             {
-                                if (!string.IsNullOrWhiteSpace(reading))
-                                {
-                                    lastString = reading;
-                                }
+                                lastString = reading;
                             }
                         }
                     }
@@ -130,6 +128,11 @@ namespace Hspi.Connector
             }
             catch (Exception ex)
             {
+                if (ex.IsCancelException())
+                {
+                    throw;
+                }
+
                 Trace.TraceError(Invariant($"Failed to  get data from {DeviceIP}. {ex.GetFullMessage()}."));
             }
         }

@@ -5,7 +5,7 @@ using System.Net;
 namespace Hspi
 {
     [NullGuard(ValidationFlags.Arguments | ValidationFlags.NonPublic)]
-    internal class AirVisualNode : IEquatable<AirVisualNode>
+    internal sealed class AirVisualNode : IEquatable<AirVisualNode>
     {
         public AirVisualNode(string id, string name, IPAddress deviceIP,
                             string username, string password)
@@ -23,7 +23,7 @@ namespace Hspi
         public string Username { get; }
         public string Password { get; }
 
-        public bool Equals(AirVisualNode other)
+        public bool Equals([AllowNull]AirVisualNode other)
         {
             if (this == other)
             {
@@ -35,6 +35,16 @@ namespace Hspi
                 Username == other.Username &&
                 Password == other.Password &&
                 DeviceIP == other.DeviceIP;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as AirVisualNode);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
         }
     }
 }

@@ -211,7 +211,7 @@ namespace Hspi
 
         private string BuildAddNewWebPageBody([AllowNull]AirVisualNode device)
         {
-            string name = device != null ? device.Name.ToString() : string.Empty;
+            string name = device != null ? device.Name : string.Empty;
             string ip = device != null ? device.DeviceIP.ToString() : string.Empty;
             string userName = device != null ? device.Username : string.Empty;
             string password = device != null ? device.Password : string.Empty;
@@ -292,7 +292,6 @@ namespace Hspi
         private const string DeviceIPId = "DeviceIPId";
         private const string EditDevicePageType = "addNew";
         private const string IdPrefix = "id_";
-        private const string ImageDivId = "image_id";
         private const string NameId = "NameId";
         private const string PageTypeId = "type";
         private const string PasswordId = "PasswordId";

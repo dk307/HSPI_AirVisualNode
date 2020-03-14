@@ -21,21 +21,21 @@ namespace Hspi.DeviceData
             GetCurrentDevices();
         }
 
-        public void ProcessSensorData(AirVisualNode device, SensorData sensorData)
+        public void ProcessSensorData(SensorData sensorData)
         {
-            UpdateSensorValue(device, DeviceType.CO2, sensorData.CO2, sensorData.updateTime);
-            UpdateSensorValue(device, DeviceType.Humidity, sensorData.Humidity, sensorData.updateTime);
-            UpdateSensorValue(device, DeviceType.OutsidePM25AQI, sensorData.OutsidePM25AQI, sensorData.updateTime);
-            UpdateSensorValue(device, DeviceType.OutsidePM25AQICN, sensorData.OutsidePM25AQICN, sensorData.updateTime);
-            UpdateSensorValue(device, DeviceType.PM10, sensorData.PM10, sensorData.updateTime);
-            UpdateSensorValue(device, DeviceType.PM25, sensorData.PM25, sensorData.updateTime);
-            UpdateSensorValue(device, DeviceType.PM25AQI, sensorData.PM25AQI, sensorData.updateTime);
-            UpdateSensorValue(device, DeviceType.PM25AQICN, sensorData.PM25AQICN, sensorData.updateTime);
-            UpdateSensorValue(device, DeviceType.TemperatureC, sensorData.TemperatureC, sensorData.updateTime);
-            UpdateSensorValue(device, DeviceType.TemperatureF, sensorData.TemperatureF, sensorData.updateTime);
+            UpdateSensorValue(DeviceType.CO2, sensorData.CO2, sensorData.updateTime);
+            UpdateSensorValue(DeviceType.Humidity, sensorData.Humidity, sensorData.updateTime);
+            UpdateSensorValue(DeviceType.OutsidePM25AQI, sensorData.OutsidePM25AQI, sensorData.updateTime);
+            UpdateSensorValue(DeviceType.OutsidePM25AQICN, sensorData.OutsidePM25AQICN, sensorData.updateTime);
+            UpdateSensorValue(DeviceType.PM10, sensorData.PM10, sensorData.updateTime);
+            UpdateSensorValue(DeviceType.PM25, sensorData.PM25, sensorData.updateTime);
+            UpdateSensorValue(DeviceType.PM25AQI, sensorData.PM25AQI, sensorData.updateTime);
+            UpdateSensorValue(DeviceType.PM25AQICN, sensorData.PM25AQICN, sensorData.updateTime);
+            UpdateSensorValue(DeviceType.TemperatureC, sensorData.TemperatureC, sensorData.updateTime);
+            UpdateSensorValue(DeviceType.TemperatureF, sensorData.TemperatureF, sensorData.updateTime);
         }
 
-        private void UpdateSensorValue(AirVisualNode device, DeviceType deviceType, double value, DateTime updateTime)
+        private void UpdateSensorValue(DeviceType deviceType, double value, DateTime updateTime)
         {
             var deviceIdentifier = new DeviceIdentifier(rootDeviceId, deviceType);
 

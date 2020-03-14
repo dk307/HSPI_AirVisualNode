@@ -29,8 +29,8 @@ namespace Hspi.DeviceData
 
         public abstract void Update(IHSApplication HS, double deviceValue, DateTime updateTime);
 
-        public virtual Task HandleCommand(AirVisualNodeConnector connector, CancellationToken token,
-                                          double value, ePairControlUse control) => throw new NotImplementedException();
+        public virtual Task HandleCommand(AirVisualNodeConnector connector, double value,
+            ePairControlUse control, CancellationToken token) => throw new NotImplementedException();
 
         public int RefId { get; set; }
         public DeviceType DeviceType { get; }

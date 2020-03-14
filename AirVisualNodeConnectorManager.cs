@@ -70,7 +70,7 @@ namespace Hspi.Connector
                     {
                         try
                         {
-                            rootDeviceData.ProcessSensorData(Device, sensorData);
+                            rootDeviceData.ProcessSensorData(sensorData);
                         }
                         catch (Exception ex)
                         {

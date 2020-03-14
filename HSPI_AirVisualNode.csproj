@@ -1,7 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="packages\NullGuard.Fody.1.8.5\build\NullGuard.Fody.props" Condition="Exists('packages\NullGuard.Fody.1.8.5\build\NullGuard.Fody.props')" />
-  <Import Project="packages\Costura.Fody.3.1.6\build\Costura.Fody.props" Condition="Exists('packages\Costura.Fody.3.1.6\build\Costura.Fody.props')" />
+  <Import Project="packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.6\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props" Condition="Exists('packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.6\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" />
+  <Import Project="packages\Microsoft.NetFramework.Analyzers.2.9.6\build\Microsoft.NetFramework.Analyzers.props" Condition="Exists('packages\Microsoft.NetFramework.Analyzers.2.9.6\build\Microsoft.NetFramework.Analyzers.props')" />
+  <Import Project="packages\Microsoft.NetCore.Analyzers.2.9.6\build\Microsoft.NetCore.Analyzers.props" Condition="Exists('packages\Microsoft.NetCore.Analyzers.2.9.6\build\Microsoft.NetCore.Analyzers.props')" />
+  <Import Project="packages\Microsoft.CodeQuality.Analyzers.2.9.6\build\Microsoft.CodeQuality.Analyzers.props" Condition="Exists('packages\Microsoft.CodeQuality.Analyzers.2.9.6\build\Microsoft.CodeQuality.Analyzers.props')" />
+  <Import Project="packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props" Condition="Exists('packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" />
+  <Import Project="packages\NullGuard.Fody.2.2.0\build\NullGuard.Fody.props" Condition="Exists('packages\NullGuard.Fody.2.2.0\build\NullGuard.Fody.props')" />
+  <Import Project="packages\Costura.Fody.4.1.0\build\Costura.Fody.props" Condition="Exists('packages\Costura.Fody.4.1.0\build\Costura.Fody.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -76,8 +81,8 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Costura, Version=3.1.6.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
-      <HintPath>packages\Costura.Fody.3.1.6\lib\net46\Costura.dll</HintPath>
+    <Reference Include="Costura, Version=4.1.0.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
+      <HintPath>packages\Costura.Fody.4.1.0\lib\net40\Costura.dll</HintPath>
     </Reference>
     <Reference Include="HomeSeerAPI, Version=1.0.2.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\homeseer.1.2.8\lib\net45\HomeSeerAPI.dll</HintPath>
@@ -86,31 +91,93 @@
       <HintPath>packages\homeseer.1.2.8\lib\net45\HSCF.dll</HintPath>
     </Reference>
     <Reference Include="Nito.AsyncEx.Coordination, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Nito.AsyncEx.Coordination.5.0.0-pre-05\lib\netstandard2.0\Nito.AsyncEx.Coordination.dll</HintPath>
+      <HintPath>packages\Nito.AsyncEx.Coordination.5.0.0\lib\netstandard2.0\Nito.AsyncEx.Coordination.dll</HintPath>
     </Reference>
     <Reference Include="Nito.AsyncEx.Tasks, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Nito.AsyncEx.Tasks.5.0.0-pre-05\lib\netstandard2.0\Nito.AsyncEx.Tasks.dll</HintPath>
+      <HintPath>packages\Nito.AsyncEx.Tasks.5.0.0\lib\netstandard2.0\Nito.AsyncEx.Tasks.dll</HintPath>
     </Reference>
     <Reference Include="Nito.Collections.Deque, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Nito.Collections.Deque.1.0.4\lib\netstandard2.0\Nito.Collections.Deque.dll</HintPath>
     </Reference>
-    <Reference Include="Nito.Disposables, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Nito.Disposables.2.0.0\lib\netstandard2.0\Nito.Disposables.dll</HintPath>
+    <Reference Include="Nito.Disposables, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Nito.Disposables.2.0.1\lib\net461\Nito.Disposables.dll</HintPath>
     </Reference>
-    <Reference Include="NullGuard, Version=1.8.5.0, Culture=neutral, PublicKeyToken=1ca091877d12ca03, processorArchitecture=MSIL">
-      <HintPath>packages\NullGuard.Fody.1.8.5\lib\net40\NullGuard.dll</HintPath>
+    <Reference Include="NullGuard, Version=2.2.0.0, Culture=neutral, PublicKeyToken=1ca091877d12ca03, processorArchitecture=MSIL">
+      <HintPath>packages\NullGuard.Fody.2.2.0\lib\net40\NullGuard.dll</HintPath>
     </Reference>
     <Reference Include="Scheduler, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\homeseer.1.2.8\lib\net45\Scheduler.dll</HintPath>
     </Reference>
+    <Reference Include="SharpCifs.Std, Version=0.2.13.0, Culture=neutral, PublicKeyToken=7071e1dce0b7c6b0, processorArchitecture=MSIL">
+      <HintPath>packages\SharpCifs.Std.0.2.13\lib\netstandard1.3\SharpCifs.Std.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Collections.Immutable, Version=1.2.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\System.Collections.Immutable.1.4.0\lib\netstandard2.0\System.Collections.Immutable.dll</HintPath>
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Buffers.4.5.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.Immutable, Version=1.2.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Collections.Immutable.1.7.0\lib\netstandard2.0\System.Collections.Immutable.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Console, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Console.4.3.0\lib\net46\System.Console.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Memory.4.5.3\lib\netstandard2.0\System.Memory.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.NameResolution, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Net.NameResolution.4.3.0\lib\net46\System.Net.NameResolution.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.NetworkInformation, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Net.NetworkInformation.4.3.0\lib\net46\System.Net.NetworkInformation.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Sockets, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Net.Sockets.4.3.0\lib\net46\System.Net.Sockets.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.4.7.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net463\System.Security.Cryptography.Algorithms.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -119,7 +186,6 @@
     <Compile Include="AirVisualNodeConnectorManager.cs" />
     <Compile Include="HSTraceListener.cs" />
     <Compile Include="ILogger.cs" />
-    <Compile Include="SharpCifs\Config.cs" />
     <Compile Include="ConfigPage.cs" />
     <Compile Include="Connector\AirVisualNodeConnector.cs" />
     <Compile Include="SensorData.cs" />
@@ -131,7 +197,6 @@
     <Compile Include="DeviceData\RootDeviceData.cs" />
     <Compile Include="DeviceType.cs" />
     <Compile Include="Utils\ExceptionHelper.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="EnumHelper.cs" />
     <Compile Include="HSPI.cs" />
     <Compile Include="PlugIn.cs" />
@@ -143,125 +208,6 @@
     <Compile Include="HSPIBase.cs" />
     <Compile Include="IPlugInAPI2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SharpCifs\Dcerpc\DcerpcConstants.cs" />
-    <Compile Include="SharpCifs\Dcerpc\DcerpcError.cs" />
-    <Compile Include="SharpCifs\Dcerpc\DcerpcMessage.cs" />
-    <Compile Include="SharpCifs\Dcerpc\DcerpcSecurityProvider.cs" />
-    <Compile Include="SharpCifs\Dcerpc\Msrpc\Lsarpc.cs" />
-    <Compile Include="SharpCifs\Dcerpc\Msrpc\Netdfs.cs" />
-    <Compile Include="SharpCifs\Dcerpc\Msrpc\Samr.cs" />
-    <Compile Include="SharpCifs\Dcerpc\Ndr\NdrBuffer.cs" />
-    <Compile Include="SharpCifs\Dcerpc\Ndr\NdrException.cs" />
-    <Compile Include="SharpCifs\Dcerpc\Ndr\NdrObject.cs" />
-    <Compile Include="SharpCifs\Dcerpc\Ndr\NdrSmall.cs" />
-    <Compile Include="SharpCifs\Dcerpc\Rpc.cs" />
-    <Compile Include="SharpCifs\Dcerpc\UUID.cs" />
-    <Compile Include="SharpCifs\Netbios\Name.cs" />
-    <Compile Include="SharpCifs\Netbios\NbtAddress.cs" />
-    <Compile Include="SharpCifs\Ntlmssp\NtlmFlags.cs" />
-    <Compile Include="SharpCifs\Ntlmssp\NtlmMessage.cs" />
-    <Compile Include="SharpCifs\Ntlmssp\Type1Message.cs" />
-    <Compile Include="SharpCifs\Ntlmssp\Type2Message.cs" />
-    <Compile Include="SharpCifs\Ntlmssp\Type3Message.cs" />
-    <Compile Include="SharpCifs\Smb\AllocInfo.cs" />
-    <Compile Include="SharpCifs\Smb\AndXServerMessageBlock.cs" />
-    <Compile Include="SharpCifs\Smb\BufferCache.cs" />
-    <Compile Include="SharpCifs\Smb\DosError.cs" />
-    <Compile Include="SharpCifs\Smb\FileEntry.cs" />
-    <Compile Include="SharpCifs\Smb\IInfo.cs" />
-    <Compile Include="SharpCifs\Smb\NtlmAuthenticator.cs" />
-    <Compile Include="SharpCifs\Smb\NtlmChallenge.cs" />
-    <Compile Include="SharpCifs\Smb\NtlmContext.cs" />
-    <Compile Include="SharpCifs\Smb\NtlmPasswordAuthentication.cs" />
-    <Compile Include="SharpCifs\Smb\NtStatus.cs" />
-    <Compile Include="SharpCifs\Smb\Principal.cs" />
-    <Compile Include="SharpCifs\Smb\ServerMessageBlock.cs" />
-    <Compile Include="SharpCifs\Smb\SigningDigest.cs" />
-    <Compile Include="SharpCifs\Smb\SmbAuthException.cs" />
-    <Compile Include="SharpCifs\Smb\SmbComBlankResponse.cs" />
-    <Compile Include="SharpCifs\Smb\SmbComClose.cs" />
-    <Compile Include="SharpCifs\Smb\SmbComLogoffAndX.cs" />
-    <Compile Include="SharpCifs\Smb\SmbComNegotiate.cs" />
-    <Compile Include="SharpCifs\Smb\SmbComNegotiateResponse.cs" />
-    <Compile Include="SharpCifs\Smb\SmbComNTCreateAndX.cs" />
-    <Compile Include="SharpCifs\Smb\SmbComNTCreateAndXResponse.cs" />
-    <Compile Include="SharpCifs\Smb\SmbComOpenAndX.cs" />
-    <Compile Include="SharpCifs\Smb\SmbComOpenAndXResponse.cs" />
-    <Compile Include="SharpCifs\Smb\SmbComQueryInformation.cs" />
-    <Compile Include="SharpCifs\Smb\SmbComQueryInformationResponse.cs" />
-    <Compile Include="SharpCifs\Smb\SmbComReadAndX.cs" />
-    <Compile Include="SharpCifs\Smb\SmbComReadAndXResponse.cs" />
-    <Compile Include="SharpCifs\Smb\SmbComSessionSetupAndX.cs" />
-    <Compile Include="SharpCifs\Smb\SmbComSessionSetupAndXResponse.cs" />
-    <Compile Include="SharpCifs\Smb\SmbComTransaction.cs" />
-    <Compile Include="SharpCifs\Smb\SmbComTransactionResponse.cs" />
-    <Compile Include="SharpCifs\Smb\SmbComTreeConnectAndX.cs" />
-    <Compile Include="SharpCifs\Smb\SmbComTreeConnectAndXResponse.cs" />
-    <Compile Include="SharpCifs\Smb\SmbComTreeDisconnect.cs" />
-    <Compile Include="SharpCifs\Smb\SmbConstants.cs" />
-    <Compile Include="SharpCifs\Smb\SmbException.cs" />
-    <Compile Include="SharpCifs\Smb\SmbFile.cs" />
-    <Compile Include="SharpCifs\Smb\SmbFileExtensions.cs" />
-    <Compile Include="SharpCifs\Smb\SmbFileFilter.cs" />
-    <Compile Include="SharpCifs\Smb\SmbFileInputStream.cs" />
-    <Compile Include="SharpCifs\Smb\SmbSession.cs" />
-    <Compile Include="SharpCifs\Smb\SmbTransport.cs" />
-    <Compile Include="SharpCifs\Smb\SmbTree.cs" />
-    <Compile Include="SharpCifs\Smb\Trans2QueryFSInformation.cs" />
-    <Compile Include="SharpCifs\Smb\Trans2QueryFSInformationResponse.cs" />
-    <Compile Include="SharpCifs\Smb\Trans2QueryPathInformation.cs" />
-    <Compile Include="SharpCifs\Smb\Trans2QueryPathInformationResponse.cs" />
-    <Compile Include="SharpCifs\Smb\WinError.cs" />
-    <Compile Include="SharpCifs\UniAddress.cs" />
-    <Compile Include="SharpCifs\Util\DbsHelper\Log.cs" />
-    <Compile Include="SharpCifs\Util\DES.cs" />
-    <Compile Include="SharpCifs\Util\Encdec.cs" />
-    <Compile Include="SharpCifs\Util\Hexdump.cs" />
-    <Compile Include="SharpCifs\Util\HMACT64.cs" />
-    <Compile Include="SharpCifs\Util\LogStream.cs" />
-    <Compile Include="SharpCifs\Util\MD4.cs" />
-    <Compile Include="SharpCifs\Util\RC4.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\AbstractMap.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\Arrays.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\BufferedReader.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\CharSequence.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\Collections.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\DateFormat.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\EnumeratorWrapper.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\Exceptions.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\Extensions.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\FileInputStream.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\FilePath.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\FileWriter.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\Hashtable.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\HttpURLConnection.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\ICallable.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\IConcurrentMap.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\IExecutor.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\IFilenameFilter.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\IFuture.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\InputStream.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\InputStreamReader.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\IPrivilegedAction.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\IRunnable.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\Iterator.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\MD5.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\MD5Managed.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\MessageDigest.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\NetworkStream.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\OutputStream.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\PrintWriter.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\Properties.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\Reference.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\Runtime.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\SocketEx.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\SynchronizedList.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\Thread.cs" />
-    <Compile Include="SharpCifs\Util\Sharpen\WrappedSystemStream.cs" />
-    <Compile Include="SharpCifs\Util\Transport\Request.cs" />
-    <Compile Include="SharpCifs\Util\Transport\Response.cs" />
-    <Compile Include="SharpCifs\Util\Transport\Transport.cs" />
-    <Compile Include="SharpCifs\Util\Transport\TransportException.cs" />
     <Compile Include="Utils\TaskHelper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -284,7 +230,17 @@
   <ItemGroup>
     <None Include="FodyWeavers.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Analyzer Include="packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\analyzers\dotnet\cs\Microsoft.CodeAnalysis.VersionCheckAnalyzer.resources.dll" />
+    <Analyzer Include="packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\analyzers\dotnet\Microsoft.CodeAnalysis.VersionCheckAnalyzer.dll" />
+    <Analyzer Include="packages\Microsoft.CodeQuality.Analyzers.2.9.6\analyzers\dotnet\cs\Humanizer.dll" />
+    <Analyzer Include="packages\Microsoft.CodeQuality.Analyzers.2.9.6\analyzers\dotnet\cs\Microsoft.CodeQuality.Analyzers.dll" />
+    <Analyzer Include="packages\Microsoft.CodeQuality.Analyzers.2.9.6\analyzers\dotnet\cs\Microsoft.CodeQuality.CSharp.Analyzers.dll" />
+    <Analyzer Include="packages\Microsoft.NetCore.Analyzers.2.9.6\analyzers\dotnet\cs\Microsoft.NetCore.Analyzers.dll" />
+    <Analyzer Include="packages\Microsoft.NetCore.Analyzers.2.9.6\analyzers\dotnet\cs\Microsoft.NetCore.CSharp.Analyzers.dll" />
+    <Analyzer Include="packages\Microsoft.NetFramework.Analyzers.2.9.6\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
+    <Analyzer Include="packages\Microsoft.NetFramework.Analyzers.2.9.6\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <UsingTask TaskName="CosturaCleanup" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll" TaskFactory="CodeTaskFactory">
     <ParameterGroup>
@@ -322,15 +278,20 @@ foreach (var item in filesToCleanup)
   <Target Name="CleanReferenceCopyLocalPaths" AfterTargets="AfterBuild;NonWinFodyTarget">
     <CosturaCleanup Config="FodyWeavers.xml" Files="@(ReferenceCopyLocalPaths->'$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" />
   </Target>
-  <Import Project="packages\Fody.3.3.2\build\Fody.targets" Condition="Exists('packages\Fody.3.3.2\build\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('packages\Fody.3.3.2\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Fody.3.3.2\build\Fody.targets'))" />
-    <Error Condition="!Exists('packages\Costura.Fody.3.1.6\build\Costura.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Costura.Fody.3.1.6\build\Costura.Fody.props'))" />
-    <Error Condition="!Exists('packages\NullGuard.Fody.1.8.5\build\NullGuard.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\NullGuard.Fody.1.8.5\build\NullGuard.Fody.props'))" />
+    <Error Condition="!Exists('packages\Costura.Fody.4.1.0\build\Costura.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Costura.Fody.4.1.0\build\Costura.Fody.props'))" />
+    <Error Condition="!Exists('packages\Fody.6.1.1\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Fody.6.1.1\build\Fody.targets'))" />
+    <Error Condition="!Exists('packages\NullGuard.Fody.2.2.0\build\NullGuard.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\NullGuard.Fody.2.2.0\build\NullGuard.Fody.props'))" />
+    <Error Condition="!Exists('packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props'))" />
+    <Error Condition="!Exists('packages\Microsoft.CodeQuality.Analyzers.2.9.6\build\Microsoft.CodeQuality.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.CodeQuality.Analyzers.2.9.6\build\Microsoft.CodeQuality.Analyzers.props'))" />
+    <Error Condition="!Exists('packages\Microsoft.NetCore.Analyzers.2.9.6\build\Microsoft.NetCore.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.NetCore.Analyzers.2.9.6\build\Microsoft.NetCore.Analyzers.props'))" />
+    <Error Condition="!Exists('packages\Microsoft.NetFramework.Analyzers.2.9.6\build\Microsoft.NetFramework.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.NetFramework.Analyzers.2.9.6\build\Microsoft.NetFramework.Analyzers.props'))" />
+    <Error Condition="!Exists('packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.6\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.6\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
   </Target>
+  <Import Project="packages\Fody.6.1.1\build\Fody.targets" Condition="Exists('packages\Fody.6.1.1\build\Fody.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
