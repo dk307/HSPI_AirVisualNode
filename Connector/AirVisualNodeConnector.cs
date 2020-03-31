@@ -15,6 +15,17 @@ namespace Hspi.Connector
 {
     internal sealed class AirVisualNodeConnector : IDisposable
     {
+
+        static AirVisualNodeConnector()
+        {
+            //Turn off all caching and reuse
+            SharpCifs.Config.SetProperty("jcifs.netbios.cachePolicy", "0");
+            SharpCifs.Config.SetProperty("jcifs.smb.client.ssnLimit", "1");
+            SharpCifs.Config.SetProperty("jcifs.smb.client.attrExpirationPeriod", "0");
+            SharpCifs.Config.SetProperty("jcifs.smb.client.responseTimeout", "5000");
+            SharpCifs.Config.SetProperty("jcifs.smb.client.soTimeout", "5000");
+        }
+
         public AirVisualNodeConnector(IPAddress deviceIP,
                                       NetworkCredential credentials,
                                       CancellationToken token)
