@@ -22,8 +22,8 @@ namespace Hspi.Connector
             SharpCifs.Config.SetProperty("jcifs.netbios.cachePolicy", "0");
             SharpCifs.Config.SetProperty("jcifs.smb.client.ssnLimit", "1");
             SharpCifs.Config.SetProperty("jcifs.smb.client.attrExpirationPeriod", "0");
-            SharpCifs.Config.SetProperty("jcifs.smb.client.responseTimeout", "5000");
-            SharpCifs.Config.SetProperty("jcifs.smb.client.soTimeout", "5000");
+            SharpCifs.Config.SetProperty("jcifs.smb.client.responseTimeout", "10000");
+            SharpCifs.Config.SetProperty("jcifs.smb.client.soTimeout", "10000");
         }
 
         public AirVisualNodeConnector(IPAddress deviceIP,
@@ -56,6 +56,16 @@ namespace Hspi.Connector
             }
         }
 
+        private static void ClearSmbState()
+        {
+            try
+            {
+                SmbTransport.ClearCachedConnections(true);
+                SmbFile.Initialize();
+            }
+            catch { }
+        }
+
         private static float ParseFloat(string[] values, int index)
         {
             return float.Parse(values[index], CultureInfo.InvariantCulture);
@@ -71,6 +81,7 @@ namespace Hspi.Connector
             try
             {
                 Trace.WriteLine(Invariant($"Connecting to {DeviceIP}"));
+                ClearSmbState();
 
                 DateTime localTime = DateTime.Now.ToLocalTime();
                 string path = Invariant($"smb://{DeviceIP}/airvisual/{localTime.Year}{localTime.Month:00}_AirVisual_values.txt");
@@ -144,10 +155,9 @@ namespace Hspi.Connector
                     throw;
                 }
 
-                Trace.TraceError(Invariant($"Failed to  get data from {DeviceIP}. {ex.GetFullMessage()}."));
+                Trace.TraceError(Invariant($"Failed to get data from {DeviceIP}. {ex.GetFullMessage()}."));
             }
         }
-
         private async Task StartWorking()
         {
             while (!sourceShutdownToken.Token.IsCancellationRequested)
