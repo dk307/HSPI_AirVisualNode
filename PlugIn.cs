@@ -224,6 +224,6 @@ namespace Hspi
         private readonly IDictionary<string, AirVisualNodeConnectorManager> connectorManager = new Dictionary<string, AirVisualNodeConnectorManager>();
         private ConfigPage configPage;
         private PluginConfig pluginConfig;
-        private bool disposedValue = false;
+        private bool disposedValue;
     }
 }

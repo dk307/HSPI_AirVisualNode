@@ -174,7 +174,7 @@ namespace Hspi.Connector
 
         private readonly NetworkCredential credentials;
         private readonly CancellationTokenSource sourceShutdownToken;
-        private bool disposedValue = false;
+        private bool disposedValue;
         private DateTime lastUpdate;
     }
 }
