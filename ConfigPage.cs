@@ -141,18 +141,18 @@ namespace Hspi
 
                     this.pluginConfig.AddDevice(device);
                     this.pluginConfig.FireConfigChanged();
-                    this.divToUpdate.Add(SaveErrorDivId, RedirectPage(Invariant($"/{HttpUtility.UrlEncode(ConfigPage.Name)}")));
+                    this.divToUpdate.Add(SaveErrorDivId, RedirectPageJS(Invariant($"/{HttpUtility.UrlEncode(ConfigPage.Name)}")));
                 }
             }
             else if (form == NameToIdWithPrefix(CancelDeviceName))
             {
-                this.divToUpdate.Add(SaveErrorDivId, RedirectPage(Invariant($"/{HttpUtility.UrlEncode(ConfigPage.Name)}")));
+                this.divToUpdate.Add(SaveErrorDivId, RedirectPageJS(Invariant($"/{HttpUtility.UrlEncode(ConfigPage.Name)}")));
             }
             else if (form == NameToIdWithPrefix(DeleteDeviceName))
             {
                 this.pluginConfig.RemoveDevice(parts[DeviceIdId]);
                 this.pluginConfig.FireConfigChanged();
-                this.divToUpdate.Add(SaveErrorDivId, RedirectPage(Invariant($"/{HttpUtility.UrlEncode(ConfigPage.Name)}")));
+                this.divToUpdate.Add(SaveErrorDivId, RedirectPageJS(Invariant($"/{HttpUtility.UrlEncode(ConfigPage.Name)}")));
             }
             else if (form == NameToIdWithPrefix(DebugLoggingId))
             {
@@ -281,6 +281,15 @@ namespace Hspi
             stb.Append(@" </table>");
             stb.Append(@"</div>");
 
+            return stb.ToString();
+        }
+
+        private static string RedirectPageJS(string url)
+        {
+            StringBuilder stb = new StringBuilder();
+            stb.AppendLine("<script type='text/javascript'>");
+            stb.AppendLine(Invariant($"$(document).ready(function() {{ location.assign('{url}'); }});"));
+            stb.AppendLine("</script>");
             return stb.ToString();
         }
 
