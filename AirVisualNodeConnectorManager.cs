@@ -100,6 +100,6 @@ namespace Hspi.Connector
         private readonly IHSApplication HS;
         private readonly DeviceRootDeviceManager rootDeviceData;
         private readonly AsyncLock rootDeviceDataLock = new AsyncLock();
-        private bool disposedValue = false; // To detect redundant calls
+        private bool disposedValue;
     }
 }

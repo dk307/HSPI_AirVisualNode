@@ -194,7 +194,7 @@ namespace Hspi.DeviceData
         private readonly string rootDeviceId;
         private readonly string deviceName;
         private readonly IHSApplication HS;
-        private int? parentRefId = null;
+        private int? parentRefId;
         private readonly IDictionary<string, DeviceData> currentChildDevices = new Dictionary<string, DeviceData>();
     };
 }

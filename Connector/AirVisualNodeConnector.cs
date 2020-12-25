@@ -15,7 +15,6 @@ namespace Hspi.Connector
 {
     internal sealed class AirVisualNodeConnector : IDisposable
     {
-
         static AirVisualNodeConnector()
         {
             //Turn off all caching and reuse
@@ -66,9 +65,10 @@ namespace Hspi.Connector
             catch { }
         }
 
-        private static float ParseFloat(string[] values, int index)
+        private static double ParseValue(string[] values, int index)
         {
-            return float.Parse(values[index], CultureInfo.InvariantCulture);
+            var value = double.Parse(values[index], NumberStyles.Float, CultureInfo.InvariantCulture);
+            return value;
         }
 
         private static long ParseLong(string[] values, int index)
@@ -132,16 +132,16 @@ namespace Hspi.Connector
 
                 if (lastUpdate != sensorData.updateTime)
                 {
-                    sensorData.PM25 = ParseFloat(tokens, 3);
-                    sensorData.PM25AQI = ParseFloat(tokens, 4);
-                    sensorData.PM25AQICN = ParseFloat(tokens, 5);
-                    sensorData.PM10 = ParseFloat(tokens, 6);
-                    sensorData.OutsidePM25AQI = ParseFloat(tokens, 7);
-                    sensorData.OutsidePM25AQICN = ParseFloat(tokens, 8);
-                    sensorData.TemperatureC = ParseFloat(tokens, 9);
-                    sensorData.TemperatureF = ParseFloat(tokens, 10);
-                    sensorData.Humidity = ParseFloat(tokens, 11);
-                    sensorData.CO2 = ParseFloat(tokens, 12);
+                    sensorData.PM25 = ParseValue(tokens, 3);
+                    sensorData.PM25AQI = ParseValue(tokens, 4);
+                    sensorData.PM25AQICN = ParseValue(tokens, 5);
+                    sensorData.PM10 = ParseValue(tokens, 6);
+                    sensorData.OutsidePM25AQI = ParseValue(tokens, 7);
+                    sensorData.OutsidePM25AQICN = ParseValue(tokens, 8);
+                    sensorData.TemperatureC = ParseValue(tokens, 9);
+                    sensorData.TemperatureF = ParseValue(tokens, 10);
+                    sensorData.Humidity = ParseValue(tokens, 11);
+                    sensorData.CO2 = ParseValue(tokens, 12);
 
                     UpdateDelta(sensorData);
                     lastUpdate = sensorData.updateTime;
@@ -158,6 +158,7 @@ namespace Hspi.Connector
                 Trace.TraceError(Invariant($"Failed to get data from {DeviceIP}. {ex.GetFullMessage()}."));
             }
         }
+
         private async Task StartWorking()
         {
             while (!sourceShutdownToken.Token.IsCancellationRequested)
@@ -174,7 +175,7 @@ namespace Hspi.Connector
 
         private readonly NetworkCredential credentials;
         private readonly CancellationTokenSource sourceShutdownToken;
-        private bool disposedValue = false;
+        private bool disposedValue;
         private DateTime lastUpdate;
     }
 }

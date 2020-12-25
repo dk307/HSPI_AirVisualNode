@@ -274,7 +274,7 @@ namespace Hspi
         private readonly Dictionary<string, AirVisualNode> devices = new Dictionary<string, AirVisualNode>();
         private readonly IHSApplication HS;
         private bool debugLogging;
-        private bool disposedValue = false;
+        private bool disposedValue;
         private readonly ReaderWriterLockSlim configLock = new ReaderWriterLockSlim();
     };
 }
